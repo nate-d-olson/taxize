@@ -31,10 +31,12 @@ Depends:
     R(>= 2.10.0)
 Imports:
     XML,
+    httr (>= 0.2),
     RCurl (>= 1.6),
+    curl,
     stringr,
     plyr,
-    httr (>= 0.2),
+    dplyr,
     jsonlite,
     foreach,
     ape,

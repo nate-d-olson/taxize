@@ -5,6 +5,17 @@ itis_GET <- function(endpt, args, ...){
   xmlParse(content(tt, "text"))
 }
 
+#' itis sql query
+#'
+#' @importFrom dplyr src_sqlite tbl sql collect %>%
+#' @keywords internal
+itis_SQL <- function(query, dbpath){
+  # initialize connection to database
+  itis_db <- src_sqlite(dbpath)
+  # query, return data.frame
+  tbl(itis_db, sql(query)) %>% collect() %>% data.frame
+}
+
 itis_parse <- function(a, b, d){
   xpathfunc <- function(x, y, nsp) {
     sapply(getNodeSet(y, paste("//ax21:", x, sep=''), namespaces=nsp), xmlValue)
@@ -74,20 +85,40 @@ getanymatchcount <- function(x, ...)
 #' Get comment detail from TSN
 #'
 #' @param tsn TSN for a taxonomic group (numeric)
+#' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' current function call.
 #' @param ... optional additional curl options (debugging tools mostly)
 #' @return A data.frame with results.
 #' @examples \dontrun{
 #' getcommentdetailfromtsn(tsn=180543, config=timeout(4))
+#'
+#' # using sql locally
+#' backend_get()
+#' backend_set("localsql")
+#' getcommentdetailfromtsn(tsn=180543)
 #' }
 #' @export
 #' @keywords internal
-getcommentdetailfromtsn <- function(tsn, ...)
+getcommentdetailfromtsn <- function(tsn, backend=NULL, ...)
 {
-	out <- itis_GET("getCommentDetailFromTSN", list(tsn = tsn), config=timeout(1))
-  namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
-  matches <- c("commentDetail", "commentId", "commentTimeStamp", "commentator","updateDate")
-  colnames <- c('comment','commid','commtime','commentator','updatedate')
-	itisdf(a = out, b = namespaces, matches = matches, colnames = colnames)
+  if( is.null(backend) ){
+    bb <- backend_get()
+    backend <- bb$itis_backend
+  } else {
+    backend <- mb("api")
+  }
+  if( backend == "localsql" ) {
+    query <- paste("Select c.* from comments c inner join tu_comments_links t
+              on c.comment_id = t.comment_id and tsn = ", tsn, "order by comment_time_stamp")
+    itis_SQL(query, make_path("itis", bb$taxize_path))
+  } else {
+    out <- itis_GET("getCommentDetailFromTSN", list(tsn = tsn), ...)
+    namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
+    matches <- c("commentDetail", "commentId", "commentTimeStamp", "commentator","updateDate")
+    colnames <- c('comment','commid','commtime','commentator','updatedate')
+    itisdf(a = out, b = namespaces, matches = matches, colnames = colnames)
+  }
 }
 
 #' Get common names from tsn

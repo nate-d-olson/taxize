@@ -4,10 +4,14 @@
 \alias{getcommentdetailfromtsn}
 \title{Get comment detail from TSN}
 \usage{
-getcommentdetailfromtsn(tsn, ...)
+getcommentdetailfromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -20,6 +24,11 @@ Get comment detail from TSN
 \examples{
 \dontrun{
 getcommentdetailfromtsn(tsn=180543, config=timeout(4))
+
+# using sql locally
+backend_get()
+backend_set("localsql")
+getcommentdetailfromtsn(tsn=180543)
 }
 }
 \keyword{internal}

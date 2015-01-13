@@ -1,0 +1,57 @@
+#' Set location of data acquisition.
+#'
+#' @name backend
+#' @param itis,col,ncbi,theplantlist (character) The backend to query data from. Defaults to
+#' \code{api}, which means we query resources on the web. Alternatively, use \code{localsql},
+#' which uses local versions of databases on your own machine. This option does some checks
+#' to make sure things are setup correctly.
+#' @param path The path to store local databases. Individual databases are within this base
+#' path.
+#' @details All other data source parameters in \code{backend_set} inherit from the first
+#' \code{itis}, which is by default set to \code{itis = "api"}
+#' @examples \dontrun{
+#' # set all to remote api
+#' backend_set("api")
+#' backend_get()
+#'
+#' # set all to localsql
+#' backend_set("localsql")
+#' backend_get()
+#'
+#' # set individual data sources to different settings
+#' backend_set(col = "localsql", ncbi = "localsql")
+#' backend_get()
+#' }
+
+#' @export
+#' @rdname backend
+backend_set <- function(itis = "api", col = itis, ncbi = itis, theplantlist = itis, path="~/.taxize_local"){
+  invisible(sapply(list(itis, col, ncbi), mb))
+  options(itis_backend = itis)
+  options(col_backend = col)
+  options(ncbi_backend = ncbi)
+  options(theplantlist_backend = theplantlist)
+  options(taxize_path = path)
+}
+
+#' @export
+#' @rdname backend
+backend_get <- function(){
+  bends <- c("itis_backend","col_backend","ncbi_backend","theplantlist_backend","taxize_path")
+  structure(lapply(bends, getOption), class = "taxize_backends", .Names=bends)
+}
+
+#' @export
+print.taxize_backends <- function(x, ...){
+  cat(paste0("<taxize backends>  ", x$taxize_path), sep = "\n")
+  cat(paste0("  ITIS: ", x$itis_backend), sep = "\n")
+  cat(paste0("  COL: ", x$col_backend), sep = "\n")
+  cat(paste0("  NCBI: ", x$ncbi_backend), sep = "\n")
+  cat(paste0("  ThePlantList: ", x$theplantlist_backend), sep = "\n")
+}
+
+mb <- function(x){
+  match.arg(x, c("api","localsql"))
+}
+
+make_path <- function(x, y) path.expand(file.path(y, paste0(x, ".sqlite")))
