@@ -2,10 +2,16 @@
 % Please edit documentation in R/db.R
 \name{db}
 \alias{db}
+\alias{db_col}
 \alias{db_itis}
+\alias{db_theplantlist}
 \title{Download ITIS data}
 \usage{
 db_itis(verbose = TRUE)
+
+db_theplantlist(verbose = TRUE)
+
+db_col(user = "root", pwd = NULL, verbose = TRUE)
 }
 \arguments{
 \item{verbose}{(logical) Print messages. Default: TRUE}
@@ -20,6 +26,7 @@ Download ITIS data
 \examples{
 \dontrun{
 db_itis()
+db_col()
 }
 }
 

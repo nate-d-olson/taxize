@@ -4,7 +4,8 @@
 \alias{col_search}
 \title{Search Catalogue of Life for taxonomic IDs}
 \usage{
-col_search(name = NULL, id = NULL, start = NULL, checklist = NULL)
+col_search(name = NULL, id = NULL, start = NULL, checklist = NULL,
+  backend = NULL)
 }
 \arguments{
 \item{name}{The string to search for. Only exact matches found the name given
@@ -47,6 +48,12 @@ col_search(name=c("Apis","Puma concolor"))
 
 # An example where there is no data
 col_search(id=11935941)
+
+# Local SQL search
+backend_get()
+backend_set("localsql")
+col_search(name="Apis")
+col_search(id=6932106)
 }
 }
 \references{

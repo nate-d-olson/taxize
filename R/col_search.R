@@ -30,37 +30,56 @@
 #'
 #' # An example where there is no data
 #' col_search(id=11935941)
+#'
+#' # Local SQL search
+#' backend_get()
+#' backend_set("localsql")
+#' col_search(name="Apis")
+#' col_search(id=6932106)
 #' }
 #' @export
-col_search <- function(name=NULL, id=NULL, start=NULL, checklist=NULL)
-{
-  url <- "http://www.catalogueoflife.org/col/webservice"
-  func <- function(x, y) {
-    if(is.null(checklist)){NULL} else {
-      cc <- match.arg(checklist, choices = c(2012, 2011, 2010, 2009, 2008, 2007))
-      if (cc %in% c(2012, 2011, 2010)){
-        url <- gsub("col", paste("annual-checklist/", cc, sep = ""), url)
-      } else {
-        url <- "http://webservice.catalogueoflife.org/annual-checklist/year/search.php"
-        url <- gsub("year", cc, url)
-      }
-    }
-    args <- compact(list(name = x, id = y, start = start))
-    out <- getForm(url, .params = args)
-    tt <- xmlParse(out)
-    toget <- c('id','name','rank','name_status')
-    nodes <- getNodeSet(tt, "//result", fun=xmlToList)
-    ldply(nodes, parsecoldata)
-  }
-  safe_func <- plyr::failwith(NULL, func)
-  if(is.null(id)){
-    temp <- lapply(name, safe_func, y = NULL)
-    names(temp) <- name
+col_search <- function(name=NULL, id=NULL, start=NULL, checklist=NULL, backend=NULL){
+
+  if( is.null(backend) ){
+    bb <- backend_get()
+    backend <- bb$col_backend
   } else {
-    temp <- lapply(id, safe_func, x = NULL)
-    names(temp) <- id
+    backend <- mb("api")
   }
-  return(temp)
+
+  if( backend == "localsql" ){
+    if(!is.null(name)) query <- sprintf("SELECT * from _search_scientific where genus like '%s'", name)
+    if(!is.null(id)) query <- sprintf("SELECT * from _search_scientific where accepted_species_id like '%s'", id)
+    col_SQL(query)
+  } else {
+    url <- "http://www.catalogueoflife.org/col/webservice"
+    func <- function(x, y) {
+      if(is.null(checklist)){NULL} else {
+        cc <- match.arg(checklist, choices = c(2012, 2011, 2010, 2009, 2008, 2007))
+        if (cc %in% c(2012, 2011, 2010)){
+          url <- gsub("col", paste("annual-checklist/", cc, sep = ""), url)
+        } else {
+          url <- "http://webservice.catalogueoflife.org/annual-checklist/year/search.php"
+          url <- gsub("year", cc, url)
+        }
+      }
+      args <- compact(list(name = x, id = y, start = start))
+      out <- getForm(url, .params = args)
+      tt <- xmlParse(out)
+      toget <- c('id','name','rank','name_status')
+      nodes <- getNodeSet(tt, "//result", fun=xmlToList)
+      ldply(nodes, parsecoldata)
+    }
+    safe_func <- plyr::failwith(NULL, func)
+    if(is.null(id)){
+      temp <- lapply(name, safe_func, y = NULL)
+      names(temp) <- name
+    } else {
+      temp <- lapply(id, safe_func, x = NULL)
+      names(temp) <- id
+    }
+    return(temp)
+  }
 }
 
 parsecoldata <- function(x){
@@ -79,3 +98,11 @@ parsecoldata <- function(x){
   }
   cbind(bb, accdf)
 }
+
+#
+# col_search_sql <- function(name=NULL, id=NULL, start=NULL, checklist=NULL, backend=NULL){
+#
+#   if(!is.null(name)) query <- sprintf("SELECT * from _search_scientific where genus like '%s'", name)
+#   if(!is.null(id)) query <- sprintf("SELECT * from _search_scientific where accepted_species_id like '%s'", id)
+#   col_SQL(query)
+# }
