@@ -1,8 +1,10 @@
 #' Download ITIS data
 #'
-#' @import curl RPostgreSQL
+#' @import curl RPostgreSQL DBI
 #' @export
 #' @name db
+#' @param use User name
+#' @param pwd Password
 #' @param verbose (logical) Print messages. Default: TRUE
 #' @return Downloads sql database, loads it into SQLite, cleans up by removing unneeded files,
 #' and gives back path to the database

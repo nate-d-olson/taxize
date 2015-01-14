@@ -18,6 +18,8 @@ include: snow, multicore, parallel, doMC, etc.}
 
 \item{...}{Further arguments passed on to the TPL or TPLck function of Taxonstand.
 See \code{TPL} and \code{TPLck} for arguments.}
+
+\item{genus}{Genus name, only in tpl_search_sql}
 }
 \description{
 THIS FUNCTION IS DEFUNCT.

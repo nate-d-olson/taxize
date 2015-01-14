@@ -10,6 +10,7 @@
 #'
 #' @name tpl_search
 #' @import Taxonstand plyr
+#' @param genus Genus name, only in tpl_search_sql
 #' @param taxon A taxonomic name, or a vector of names.
 #' @param paral Paralellize or not (logical). Which back-end package you use
 #' 		depends on your operating system and just general taste. Possibilities

@@ -15,6 +15,10 @@ db_col(user = "root", pwd = NULL, verbose = TRUE)
 }
 \arguments{
 \item{verbose}{(logical) Print messages. Default: TRUE}
+
+\item{pwd}{Password}
+
+\item{use}{User name}
 }
 \value{
 Downloads sql database, loads it into SQLite, cleans up by removing unneeded files,

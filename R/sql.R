@@ -1,6 +1,6 @@
 #' ITIS sql query
 #'
-#' @importFrom dplyr src_sqlite tbl sql collect %>%
+#' @importFrom dplyr src_sqlite src_postgres src_mysql tbl sql collect %>%
 #' @keywords internal
 itis_SQL <- function(query, dbpath){
   # initialize connection to database
