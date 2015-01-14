@@ -45,6 +45,7 @@ Imports:
     data.table,
     vegan,
     bold,
+    DBI,
     RPostgreSQL
 Suggests:
     testthat,
