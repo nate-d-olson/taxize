@@ -44,7 +44,8 @@ Imports:
     reshape2,
     data.table,
     vegan,
-    bold
+    bold,
+    RPostgreSQL
 Suggests:
     testthat,
     roxygen2,

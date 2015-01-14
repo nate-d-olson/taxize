@@ -1,6 +1,6 @@
 #' Download ITIS data
 #'
-#' @import curl
+#' @import curl RPostgreSQL
 #' @export
 #' @name db
 #' @param verbose (logical) Print messages. Default: TRUE
@@ -9,6 +9,7 @@
 #' @examples \dontrun{
 #' db_itis()
 #' db_col()
+#' db_plantlist()
 #' }
 
 #' @export
@@ -41,30 +42,32 @@ db_itis <- function(verbose = TRUE){
 
 #' @export
 #' @rdname db
-db_theplantlist <- function(verbose = TRUE){
-#   # paths
-#   itis_db_url <- 'http://www.itis.gov/downloads/itisSqlite.zip'
-#   itis_db_path <- path.expand('~/.taxize_local/itisSqlite.zip')
-#   itis_db_path_file <- path.expand('~/.taxize_local/itisSqlite')
-#   itis_final_file <- path.expand('~/.taxize_local/itis.sql')
-#   # download data
-#   mssg(verbose, 'downloading...')
-#   curl_download(itis_db_url, itis_db_path, quiet=TRUE)
-#   # unzip
-#   mssg(verbose, 'unzipping...')
-#   unzip(itis_db_path, exdir = itis_db_path_file)
-#   # get file path
-#   dirs <- list.dirs(itis_db_path_file, full.names = TRUE)
-#   dir_date <- dirs[ dirs != itis_db_path_file ]
-#   db_path <- list.files(dir_date, pattern = ".sqlite", full.names = TRUE)
-#   # move database
-#   file.rename(db_path, itis_final_file)
-#   # cleanup
-#   mssg(verbose, 'cleaning up...')
-#   unlink(itis_db_path)
-#   unlink(itis_db_path_file, recursive = TRUE)
-#   # return path
-#   return( itis_final_file )
+db_plantlist <- function(user = NULL, pwd = NULL, verbose = TRUE){
+  # paths
+  db_url <- 'https://github.com/ropensci/taxizedbs/blob/master/theplantlist/plantlist.zip?raw=true'
+  db_path <- path.expand('~/.taxize_local/plantlist.zip')
+  db_path_file <- path.expand('~/.taxize_local/plantlist')
+  final_file <- path.expand('~/.taxize_local/plantlist.sql')
+  # download data
+  mssg(verbose, 'downloading...')
+  curl_download(db_url, db_path, quiet=TRUE)
+  # unzip
+  mssg(verbose, 'unzipping...')
+  unzip(db_path, exdir = db_path_file)
+  # move database
+  file.rename(file.path(db_path_file, "plantlist.sql"), final_file)
+  # cleanup
+  mssg(verbose, 'cleaning up...')
+  unlink(db_path)
+  unlink(db_path_file, recursive = TRUE)
+  # load database
+  mssg(verbose, 'creating PostgreSQL database...')
+  drv <- dbDriver("PostgreSQL")
+  psqlconn <- dbConnect(drv, user="sacmac")
+  dbSendQuery(psqlconn, "CREATE DATABASE plantlist;")
+  system(sprintf("psql %s %s plantlist < %s", cl("-U ", user), cl("-p ", pwd), final_file))
+  # return path
+  return( final_file )
 }
 
 #' @export
@@ -108,14 +111,4 @@ cl <- function(x, y){
     ""
   else
     paste0(x, y)
-}
-
-#' COL sql initiation and query
-#'
-#' @keywords internal
-col_SQL <- function(query, user = "root", password = NULL, ...){
-  # initialize connection to database
-  col_db <- src_mysql(dbname="col", user=user, password=password, ...)
-  # query, return data.frame
-  tbl(col_db, sql(query)) %>% collect() %>% data.frame
 }

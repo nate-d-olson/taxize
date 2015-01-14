@@ -2,9 +2,12 @@
 % Please edit documentation in R/tpl_search.r
 \name{tpl_search}
 \alias{tpl_search}
+\alias{tpl_search_sql}
 \title{A light wrapper around the taxonstand fxn to call Theplantlist.org database.}
 \usage{
 tpl_search(taxon, paral = FALSE, ...)
+
+tpl_search_sql(genus)
 }
 \arguments{
 \item{taxon}{A taxonomic name, or a vector of names.}
@@ -18,6 +21,8 @@ See \code{TPL} and \code{TPLck} for arguments.}
 }
 \description{
 THIS FUNCTION IS DEFUNCT.
+
+theplantlist search
 }
 \details{
 This function was a very light wrapper around TPLck anyway - we don't see further
@@ -37,6 +42,9 @@ tpl_search(taxon = splist)
 # Use more arguments within TPLck
 tpl_search(taxon = "Microbryum curvicollum", corr = TRUE)
 tpl_search(taxon = "Microbryum curvicollum", corr = TRUE, max.distance=5)
+}
+\dontrun{
+tpl_search_sql(genus = "Acanthus")
 }
 }
 \seealso{

@@ -8,6 +8,7 @@
 #' that give you access to download Theplantlist.org data \code{\link[taxize]{tpl_get}}
 #' and to get Theplantlist.org families \code{\link[taxize]{tpl_families}}.
 #'
+#' @name tpl_search
 #' @import Taxonstand plyr
 #' @param taxon A taxonomic name, or a vector of names.
 #' @param paral Paralellize or not (logical). Which back-end package you use
@@ -27,8 +28,9 @@
 #' tpl_search(taxon = "Microbryum curvicollum", corr = TRUE)
 #' tpl_search(taxon = "Microbryum curvicollum", corr = TRUE, max.distance=5)
 #' }
+
 #' @export
-#' @rdname tpl_search-defunct
+#' @rdname tpl_search
 tpl_search <- function(taxon, paral = FALSE, ...)
 {
   .Defunct(msg="This function is defunct. Use the Taxonstand functions TPL or TPLck directly.")
@@ -45,4 +47,16 @@ tpl_search <- function(taxon, paral = FALSE, ...)
     df <- taxize_ldfast(out)
     df
   }
+}
+
+#' theplantlist search
+#'
+#' @export
+#' @rdname tpl_search
+#' @examples \dontrun{
+#' tpl_search_sql(genus = "Acanthus")
+#' }
+tpl_search_sql <- function(genus){
+  query <- sprintf("SELECT * from plantlist where genus like '%s'", genus)
+  plantlist_SQL(query)
 }

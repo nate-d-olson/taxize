@@ -4,12 +4,12 @@
 \alias{db}
 \alias{db_col}
 \alias{db_itis}
-\alias{db_theplantlist}
+\alias{db_plantlist}
 \title{Download ITIS data}
 \usage{
 db_itis(verbose = TRUE)
 
-db_theplantlist(verbose = TRUE)
+db_plantlist(user = NULL, pwd = NULL, verbose = TRUE)
 
 db_col(user = "root", pwd = NULL, verbose = TRUE)
 }
@@ -27,6 +27,7 @@ Download ITIS data
 \dontrun{
 db_itis()
 db_col()
+db_plantlist()
 }
 }
 

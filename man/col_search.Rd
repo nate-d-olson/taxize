@@ -25,6 +25,10 @@ single query is 500 for terse queries and 50 for full queries).}
 
 \item{checklist}{The year of the checklist to query, if you want a specific
 year's checklist instead of the lastest as default (numeric).}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 }
 \value{
 A list of data.frame's.

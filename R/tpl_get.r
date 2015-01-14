@@ -58,7 +58,7 @@ tpl_get <- function(dir_, family = NULL)
     download.file(x, destfile=file.path(dir_, basename(x)), quiet=TRUE)
   }
   message("Downloading csv files to ", dir_, "...")
-  dir.create(dir_)
+  dir.create(dir_, recursive = TRUE)
   l_ply(csvlinks, getcsv, .progress = "text")
   message("...el fin")
 }

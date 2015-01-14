@@ -5,17 +5,6 @@ itis_GET <- function(endpt, args, ...){
   xmlParse(content(tt, "text"))
 }
 
-#' itis sql query
-#'
-#' @importFrom dplyr src_sqlite tbl sql collect %>%
-#' @keywords internal
-itis_SQL <- function(query, dbpath){
-  # initialize connection to database
-  itis_db <- src_sqlite(dbpath)
-  # query, return data.frame
-  tbl(itis_db, sql(query)) %>% collect() %>% data.frame
-}
-
 itis_parse <- function(a, b, d){
   xpathfunc <- function(x, y, nsp) {
     sapply(getNodeSet(y, paste("//ax21:", x, sep=''), namespaces=nsp), xmlValue)

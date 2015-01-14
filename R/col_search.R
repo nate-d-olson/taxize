@@ -1,6 +1,7 @@
 #' Search Catalogue of Life for taxonomic IDs
 #'
 #' @import RCurl XML plyr
+#' @importFrom dplyr src_mysql
 #' @param name The string to search for. Only exact matches found the name given
 #'   	will be returned, unless one or wildcards are included in the search
 #'   	string. An * (asterisk) character denotes a wildcard; a % (percentage)
@@ -15,6 +16,9 @@
 #' 		single query is 500 for terse queries and 50 for full queries).
 #' @param checklist The year of the checklist to query, if you want a specific
 #' 		year's checklist instead of the lastest as default (numeric).
+#' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' current function call.
 #' @details You must provide one of name or id. The other parameters (format
 #' 		and start) are optional.
 #' @references \url{http://webservice.catalogueoflife.org/}
