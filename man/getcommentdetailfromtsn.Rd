@@ -23,6 +23,7 @@ Get comment detail from TSN
 }
 \examples{
 \dontrun{
+library("httr")
 getcommentdetailfromtsn(tsn=180543, config=timeout(4))
 
 # using sql locally

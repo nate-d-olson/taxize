@@ -4,10 +4,14 @@
 \alias{getcoremetadatafromtsn}
 \title{Get core metadata from tsn}
 \usage{
-getcoremetadatafromtsn(tsn, ...)
+getcoremetadatafromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -18,6 +22,9 @@ Get core metadata from tsn
 \dontrun{
 getcoremetadatafromtsn(28727, config=timeout(3))  # coverage and currrency data
 getcoremetadatafromtsn(183671, config=timeout(4))  # no coverage or currrency data
+
+backend_set("localsql")
+getcoremetadatafromtsn(183671)
 }
 }
 \keyword{internal}

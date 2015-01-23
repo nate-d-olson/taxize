@@ -4,10 +4,14 @@
 \alias{getcommonnamesfromtsn}
 \title{Get common names from tsn}
 \usage{
-getcommonnamesfromtsn(tsn, ...)
+getcommonnamesfromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -17,6 +21,9 @@ Get common names from tsn
 \examples{
 \dontrun{
 getcommonnamesfromtsn(183833, config=timeout(1))
+
+# localsql
+getcommonnamesfromtsn(183833, backend="localsql")
 }
 }
 \keyword{internal}
