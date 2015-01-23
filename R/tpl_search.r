@@ -1,63 +1,86 @@
-#' A light wrapper around the taxonstand fxn to call Theplantlist.org database.
+#' Search ThePlantList from local SQL database
 #'
-#' THIS FUNCTION IS DEFUNCT.
+#' @export
 #'
-#' This function was a very light wrapper around TPLck anyway - we don't see further
-#' reason to keep this function. Use the Taxonstand functions \code{\link[Taxonstand]{TPL}}
-#' and \code{\link[Taxonstand]{TPLck}}, directly. However, we are keeping two functions
-#' that give you access to download Theplantlist.org data \code{\link[taxize]{tpl_get}}
-#' and to get Theplantlist.org families \code{\link[taxize]{tpl_families}}.
+#' @param genus (character) A genus name, e.g. "Poa"
+#' @param species (character) An epithet name, e.g,. "annua"
+#' @param family (character) A family name, e.g., "Poaceae"
+#' @param authority (character) Taxonomic authority, e.g., "L.".
+#' @param status (character) Taxonomic status, one of "Accepted" or ""
+#' @param kewid (character) A kew id, e.g., "kew-47692"
+#' @param operand (character) One of "AND" or "OR", only used when more than one parameter
+#' passed in, combining them. "AND" means both A and B have to be found, whereas "OR" means
+#' the search looks for A or B.
+#' @param sql A SQL query string. Make sure you include \code{plantlist} as the table name,
+#' unless you want to go modify the table name yourself in Postgres to use a different name.
+#' See examples for queries. If this parameter is used, the other parameters are ignored.
 #'
-#' @name tpl_search
-#' @import Taxonstand plyr
-#' @param genus Genus name, only in tpl_search_sql
-#' @param taxon A taxonomic name, or a vector of names.
-#' @param paral Paralellize or not (logical). Which back-end package you use
-#' 		depends on your operating system and just general taste. Possibilities
-#' 		include: snow, multicore, parallel, doMC, etc.
-#' @param ... Further arguments passed on to the TPL or TPLck function of Taxonstand.
-#' 		See \code{TPL} and \code{TPLck} for arguments.
-#' @seealso \code{\link[taxize]{tpl_get}}, \code{\link[taxize]{tpl_families}}
+#' @details \code{\link[taxize]{tpl_search}} does local search of theplantlist SQL data.
+#' This function used to wrap the \code{Taxonstand} package, but now does local SQL queries,
+#' which are more powerful. If you want \code{Taxonstand} functions, we encourage you to go
+#' use that pacakge.
+#'
+#' \code{\link{tpl_search}} does a limited set of searches, simply searching for matches via
+#' \code{variable like 'name'} like queries for variables that you pass in. If you want the
+#' full power of SQL, use \code{XXX} and \code{\link{dplyr}} to interact directly with the
+#' Thplantlist database.
+#'
+#' @seealso \code{\link[taxize]{tpl_get}}, \code{\link[taxize]{tpl_families}}, both of which
+#' download files from theplantlist.org website
+#'
 #' @examples \dontrun{
-#' # Regular non-parallel
-#' splist <- c("Heliathus annuus","Abies procera","Poa annua",
-#'    "Platanus occidentalis","Carex abrupta","Arctostaphylos canescens",
-#'    "Ocimum basilicum","Vicia faba","Quercus kelloggii","Lactuca serriola")
-#' tpl_search(taxon = splist)
+#' backend_get()
+#' backend_set("localsql")
 #'
-#' # Use more arguments within TPLck
-#' tpl_search(taxon = "Microbryum curvicollum", corr = TRUE)
-#' tpl_search(taxon = "Microbryum curvicollum", corr = TRUE, max.distance=5)
+#' # pass in parameters to search particular fields
+#' tpl_search(genus = "Acanthus")
+#' tpl_search(species = "caudatus")
+#' tpl_search(genus = "Acanthus", species = "caudatus", operand="AND")
+#' tpl_search(genus = "Acanthus", species = "caudatus", operand="OR")
+#' tpl_search(kewid = "kew-47692")
+#' tpl_search(status = "Accepted")
+#'
+#' # use raw SQL query
+#' ## NOTE: it's important to use 'plantlist' as the table name
+#' query <- "SELECT * from plantlist where species like 'annua' limit 5"
+#' tpl_search(sql = query)
+#'
+#' # Or use the SQL database directly with dplyr
+#' ## initialize connection to database
+#' library("dplyr")
+#' tpl_db <- src_postgres(dbname="plantlistdb")
+#' ## A sql query
+#' tbl(tpl_db, sql("SELECT * from plantlist limit 3")) %>% collect()
+#' ## R like query
+#' tbl(tpl_db, "plantlist") %>% filter(species == "caudatus")
+#' tbl(tpl_db, "plantlist") %>%
+#'   filter(genus == "Quercus") %>%
+#'   arrange(desc(species))
 #' }
 
-#' @export
-#' @rdname tpl_search
-tpl_search <- function(taxon, paral = FALSE, ...)
+tpl_search <- function(genus = NULL, species = NULL, family = NULL, authority = NULL,
+  status = NULL, kewid = NULL, operand="AND", sql = NULL)
 {
-  .Defunct(msg="This function is defunct. Use the Taxonstand functions TPL or TPLck directly.")
+  if(!is.null(sql)){
+    query <- sql
+  } else {
+    args <- taxize_compact(list(genus=genus, species=species, family=family, authorship=authority,
+                                taxonomic_status_in_tpl=status, kewid=kewid))
+    if(length(args) > 0){
+      allargs <- list()
+      for(i in seq_along(args)){
+        allargs[[i]] <- sprintf("%s like '%s'", names(args[i]), args[[i]])
+      }
+      if(length(allargs) > 1){
+        queryargs <- paste0(allargs, collapse = sprintf(" %s ", operand))
+      } else {
+        queryargs <- allargs[[1]]
+      }
+      query <- sprintf("SELECT * from plantlist where %s", queryargs)
+    } else {
+      stop("No arguments passed :(", .call=FALSE)
+    }
 
-  if(paral){
-    out <- llply(taxon, function(x) TPLck(x, ...), .parallel=TRUE)
-    ldply(out)
-  } else
-  {
-    out <- llply(taxon, function(x) try(TPLck(x, ...), silent=TRUE))
-    if(any(sapply(out, class)=="try-error"))
-      message(geterrmessage())
-    out <- out[!sapply(out, class)=="try-error"]
-    df <- taxize_ldfast(out)
-    df
   }
-}
-
-#' theplantlist search
-#'
-#' @export
-#' @rdname tpl_search
-#' @examples \dontrun{
-#' tpl_search_sql(genus = "Acanthus")
-#' }
-tpl_search_sql <- function(genus){
-  query <- sprintf("SELECT * from plantlist where genus like '%s'", genus)
   plantlist_SQL(query)
 }

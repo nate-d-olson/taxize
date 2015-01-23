@@ -149,8 +149,6 @@ gbif_name_usage <- function(key=NULL, name=NULL, data='all', language=NULL, data
   out
 }
 
-taxize_compact <- function (l) Filter(Negate(is.null), l)
-
 pluck <- function(x, name, type) {
   if (missing(type)) {
     lapply(x, "[[", name)

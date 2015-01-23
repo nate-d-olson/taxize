@@ -26,6 +26,10 @@ Set location of data acquisition.
 \details{
 All other data source parameters in \code{backend_set} inherit from the first
 \code{itis}, which is by default set to \code{itis = "api"}
+
+Note that the only option for Theplantlist data is "localsql". Alternatively, you can
+download raw csv files of their data using \code{\link[taxize]{tpl_get}}, or use
+the \code{Taxonstand} package that downloads csv files and uses regex locally in R.
 }
 \examples{
 \dontrun{
