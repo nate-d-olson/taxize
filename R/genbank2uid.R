@@ -61,16 +61,11 @@ is_acc <- function(x){
   is.na(gg)
 }
 
-#===================================================================================================
-#' get indexes of a unique set of the input
 unique_mapping <- function(input) {
   unique_input <- unique(input)
   vapply(input, function(x) which(x == unique_input), numeric(1))
 }
 
-
-#===================================================================================================
-#' run a function on unique values of a iterable
 map_unique <- function(input, func, ...) {
   input_class <- class(input)
   unique_input = unique(input)
