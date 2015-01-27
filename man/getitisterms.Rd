@@ -2,7 +2,7 @@
 % Please edit documentation in R/itis.R
 \name{getitisterms}
 \alias{getitisterms}
-\title{Get itis terms from common names}
+\title{Get itis terms from either common or scientific names}
 \usage{
 getitisterms(x, ...)
 }
@@ -12,7 +12,10 @@ getitisterms(x, ...)
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
 \description{
-Get itis terms from common names
+Get itis terms from either common or scientific names
+}
+\details{
+No local SQL method.
 }
 \examples{
 \dontrun{

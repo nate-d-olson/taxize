@@ -4,10 +4,14 @@
 \alias{searchforanymatch}
 \title{Search for any match}
 \usage{
-searchforanymatch(x, ...)
+searchforanymatch(x, backend = NULL, ...)
 }
 \arguments{
 \item{x}{text or taxonomic serial number (TSN) (character or numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -16,8 +20,10 @@ Search for any match
 }
 \examples{
 \dontrun{
-searchforanymatch(202385, config=timeout(3))
-searchforanymatch("dolphin", config=timeout(3))
+searchforanymatch(202385, "api")
+searchforanymatch(202385, "local")
+searchforanymatch("dolphin", "api")
+searchforanymatch("dolphin", "local")
 }
 }
 \keyword{internal}

@@ -4,10 +4,14 @@
 \alias{gettaxonomicranknamefromtsn}
 \title{Returns the kingdom and rank information for the TSN.}
 \usage{
-gettaxonomicranknamefromtsn(tsn, ...)
+gettaxonomicranknamefromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -16,7 +20,8 @@ Returns the kingdom and rank information for the TSN.
 }
 \examples{
 \dontrun{
-gettaxonomicranknamefromtsn(202385, config=timeout(3))
+gettaxonomicranknamefromtsn(202385, "api")
+gettaxonomicranknamefromtsn(202385, "local")
 }
 }
 \keyword{internal}

@@ -12,6 +12,9 @@ getdescription(...)
 \description{
 Get description of the ITIS service
 }
+\details{
+There is no SQL option for this function.
+}
 \examples{
 \dontrun{
 getdescription(config=timeout(1))

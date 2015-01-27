@@ -4,10 +4,14 @@
 \alias{getothersourcesfromtsn}
 \title{Returns a list of the other sources used for the TSN.}
 \usage{
-getothersourcesfromtsn(tsn, ...)
+getothersourcesfromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -17,6 +21,8 @@ Returns a list of the other sources used for the TSN.
 \examples{
 \dontrun{
 getothersourcesfromtsn(182662, config=timeout(3))
+getothersourcesfromtsn(182662, "api")
+getothersourcesfromtsn(182662, "local")
 }
 }
 \keyword{internal}

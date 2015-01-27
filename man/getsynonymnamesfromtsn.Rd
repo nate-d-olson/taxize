@@ -4,10 +4,14 @@
 \alias{getsynonymnamesfromtsn}
 \title{Returns a list of the synonyms (if any) for the TSN.}
 \usage{
-getsynonymnamesfromtsn(tsn, ...)
+getsynonymnamesfromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -16,8 +20,11 @@ Returns a list of the synonyms (if any) for the TSN.
 }
 \examples{
 \dontrun{
-getsynonymnamesfromtsn(183671, config=timeout(3)) # tsn not accepted
-getsynonymnamesfromtsn(526852, config=timeout(5)) # tsn accepted
+getsynonymnamesfromtsn(183671, "api") # tsn not accepted
+getsynonymnamesfromtsn(526852, "api") # tsn accepted
+
+getsynonymnamesfromtsn(183671, "local") # tsn not accepted
+getsynonymnamesfromtsn(526852, "local") # tsn accepted
 }
 }
 \keyword{internal}

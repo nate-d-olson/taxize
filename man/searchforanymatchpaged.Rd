@@ -22,6 +22,9 @@ for descending (logical)}
 \description{
 Search for any matched page
 }
+\details{
+No local SQL method.
+}
 \examples{
 \dontrun{
 searchforanymatchpaged(202385, pagesize=100, pagenum=1, ascend=FALSE, config=timeout(3))

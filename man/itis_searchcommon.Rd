@@ -4,12 +4,16 @@
 \alias{itis_searchcommon}
 \title{Searches common name and acts as thin wrapper around \code{searchbycommonnamebeginswith} and \code{searchbycommonnameendswith}}
 \usage{
-itis_searchcommon(x, from = "begin", ...)
+itis_searchcommon(x, from = "begin", backend = NULL, ...)
 }
 \arguments{
 \item{x}{Search terms}
 
 \item{from}{Default is to search from beginning. Use \code{end} to serch from end.}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{Curl options passed on to \code{\link[httr]{GET}}}
 }
@@ -21,8 +25,10 @@ Searches common name and acts as thin wrapper around \code{searchbycommonnamebeg
 }
 \examples{
 \dontrun{
-itis_searchcommon("inch", config=timeout(3))
-itis_searchcommon("inch", from = "end", config=timeout(3))
+itis_searchcommon("inch", backend="api")
+itis_searchcommon("inch", backend="local")
+itis_searchcommon("inch", from = "end", "api")
+itis_searchcommon("inch", from = "end", "local")
 }
 }
 \seealso{

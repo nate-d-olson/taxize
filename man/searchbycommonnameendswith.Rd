@@ -4,10 +4,14 @@
 \alias{searchbycommonnameendswith}
 \title{Search for tsn by common name ending with}
 \usage{
-searchbycommonnameendswith(x, ...)
+searchbycommonnameendswith(x, backend = NULL, ...)
 }
 \arguments{
 \item{x}{text or taxonomic serial number (TSN) (character or numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -16,7 +20,8 @@ Search for tsn by common name ending with
 }
 \examples{
 \dontrun{
-searchbycommonnameendswith("snake", config=timeout(3))
+searchbycommonnameendswith("snake", "api")
+searchbycommonnameendswith("snake", "local")
 }
 }
 \keyword{internal}

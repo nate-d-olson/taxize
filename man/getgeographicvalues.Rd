@@ -4,9 +4,13 @@
 \alias{getgeographicvalues}
 \title{Get all possible geographic values}
 \usage{
-getgeographicvalues(...)
+getgeographicvalues(backend = NULL, ...)
 }
 \arguments{
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
+
 \item{...}{Curl options passed on to \code{\link[httr]{GET}}}
 }
 \description{
@@ -15,6 +19,9 @@ Get all possible geographic values
 \examples{
 \dontrun{
 getgeographicvalues(config=timeout(3))
+
+backend_set("localsql")
+getgeographicvalues()
 }
 }
 \keyword{internal}

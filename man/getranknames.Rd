@@ -5,9 +5,13 @@
 \title{Provides a list of all the unique rank names contained in the database and
  their kingdom and rank ID values.}
 \usage{
-getranknames(...)
+getranknames(backend = NULL, ...)
 }
 \arguments{
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
+
 \item{...}{Curl options passed on to \code{\link[httr]{GET}}}
 }
 \description{
@@ -16,7 +20,8 @@ Provides a list of all the unique rank names contained in the database and
 }
 \examples{
 \dontrun{
-getranknames(config=timeout(3))
+getranknames("api")
+getranknames("local")
 }
 }
 \keyword{internal}

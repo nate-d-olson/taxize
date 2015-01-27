@@ -4,10 +4,14 @@
 \alias{getcredibilityratingfromtsn}
 \title{Get credibility rating from tsn}
 \usage{
-getcredibilityratingfromtsn(tsn, ...)
+getcredibilityratingfromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -17,6 +21,9 @@ Get credibility rating from tsn
 \examples{
 \dontrun{
 getcredibilityratingfromtsn(526852, config=timeout(4))
+
+backend_set("localsql")
+getcredibilityratingfromtsn(526852)
 }
 }
 \keyword{internal}

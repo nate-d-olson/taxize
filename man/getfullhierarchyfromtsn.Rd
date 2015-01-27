@@ -14,6 +14,11 @@ getfullhierarchyfromtsn(tsn, ...)
 \description{
 Get full hierarchy from tsn
 }
+\details{
+No local SQL method yet - ITIS uses a complicated Java program on the server
+side to do this, maybe later we'll have this local. We're using SQLite right now for ITIS
+data, but when moved to PostgreSQL we can maybe make this work locally.
+}
 \examples{
 \dontrun{
 getfullhierarchyfromtsn(37906, config=timeout(3))

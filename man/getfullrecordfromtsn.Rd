@@ -14,6 +14,9 @@ getfullrecordfromtsn(tsn, ...)
 \description{
 Get full record from TSN.
 }
+\details{
+No local SQL method yet - will try to get this sorted soon.
+}
 \examples{
 \dontrun{
 getfullrecordfromtsn(504239, config=timeout(3))

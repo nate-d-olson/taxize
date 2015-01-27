@@ -4,10 +4,14 @@
 \alias{gethierarchydownfromtsn}
 \title{Get hierarchy down from tsn}
 \usage{
-gethierarchydownfromtsn(tsn, ...)
+gethierarchydownfromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -17,6 +21,9 @@ Get hierarchy down from tsn
 \examples{
 \dontrun{
 gethierarchydownfromtsn(161030, config=timeout(3))
+
+backend_set("localsql")
+gethierarchydownfromtsn(161030)
 }
 }
 \keyword{internal}

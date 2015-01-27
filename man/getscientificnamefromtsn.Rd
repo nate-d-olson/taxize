@@ -5,10 +5,14 @@
 \title{Returns the scientific name for the TSN. Also returns the component parts
    (names and indicators) of the scientific name.}
 \usage{
-getscientificnamefromtsn(tsn, ...)
+getscientificnamefromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -18,7 +22,8 @@ Returns the scientific name for the TSN. Also returns the component parts
 }
 \examples{
 \dontrun{
-getscientificnamefromtsn(531894, config=timeout(3))
+getscientificnamefromtsn(531894, "api")
+getscientificnamefromtsn(531894, "local")
 }
 }
 \keyword{internal}

@@ -14,6 +14,9 @@ gettsnfromlsid(lsid, ...)
 \description{
 Gets the TSN corresponding to the LSID, or an empty result if there is no match.
 }
+\details{
+No local SQL method.
+}
 \examples{
 \dontrun{
 gettsnfromlsid(lsid="urn:lsid:itis.gov:itis_tsn:28726", config=timeout(3))

@@ -4,10 +4,14 @@
 \alias{getcoveragefromtsn}
 \title{Get coverge from tsn}
 \usage{
-getcoveragefromtsn(tsn, ...)
+getcoveragefromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -18,6 +22,9 @@ Get coverge from tsn
 \dontrun{
 getcoveragefromtsn(tsn=28727, config=timeout(4))  # coverage data
 getcoveragefromtsn(526852, config=timeout(4))  # no coverage data
+
+backend_set("localsql")
+getcoveragefromtsn(tsn=28727)
 }
 }
 \keyword{internal}

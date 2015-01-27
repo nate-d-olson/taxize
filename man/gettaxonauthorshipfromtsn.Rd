@@ -4,19 +4,29 @@
 \alias{gettaxonauthorshipfromtsn}
 \title{Returns the author information for the TSN.}
 \usage{
-gettaxonauthorshipfromtsn(tsn, ...)
+gettaxonauthorshipfromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
 \description{
 Returns the author information for the TSN.
 }
+\details{
+When \code{backend="localsql"} you can pass in many TSN's in a vector, but only one
+when \code{backend="api"}
+}
 \examples{
 \dontrun{
-gettaxonauthorshipfromtsn(183671, config=timeout(3))
+gettaxonauthorshipfromtsn(183671, "api")
+gettaxonauthorshipfromtsn(183671, "local")
+gettaxonauthorshipfromtsn(tsn=c(202385,531894,526852,183671), "local")
 }
 }
 \keyword{internal}

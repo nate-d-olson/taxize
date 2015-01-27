@@ -4,10 +4,14 @@
 \alias{searchbyscientificname}
 \title{Search by scientific name}
 \usage{
-searchbyscientificname(x, ...)
+searchbyscientificname(x, backend = NULL, ...)
 }
 \arguments{
 \item{x}{text or taxonomic serial number (TSN) (character or numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -16,8 +20,10 @@ Search by scientific name
 }
 \examples{
 \dontrun{
-searchbyscientificname("Tardigrada", config=timeout(3))
-searchbyscientificname("Quercus douglasii", config=timeout(3))
+searchbyscientificname("Tardigrada", "api")
+searchbyscientificname("Tardigrada", "local")
+searchbyscientificname("Quercus douglasii", "api")
+searchbyscientificname("Quercus douglasii", "local")
 }
 }
 \keyword{internal}

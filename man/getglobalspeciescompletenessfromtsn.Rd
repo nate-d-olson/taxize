@@ -4,10 +4,14 @@
 \alias{getglobalspeciescompletenessfromtsn}
 \title{Get global species completeness from tsn}
 \usage{
-getglobalspeciescompletenessfromtsn(tsn, ...)
+getglobalspeciescompletenessfromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -17,6 +21,9 @@ Get global species completeness from tsn
 \examples{
 \dontrun{
 getglobalspeciescompletenessfromtsn(180541, config=timeout(3))
+
+backend_set("localsql")
+getglobalspeciescompletenessfromtsn(180541)
 }
 }
 \keyword{internal}

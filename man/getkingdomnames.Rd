@@ -4,9 +4,13 @@
 \alias{getkingdomnames}
 \title{Get all possible kingdom names}
 \usage{
-getkingdomnames(...)
+getkingdomnames(backend = NULL, ...)
 }
 \arguments{
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
+
 \item{...}{Curl options passed on to \code{\link[httr]{GET}}}
 }
 \description{
@@ -15,6 +19,9 @@ Get all possible kingdom names
 \examples{
 \dontrun{
 getkingdomnames(config=timeout(3))
+
+backend_set("localsql")
+getkingdomnames()
 }
 }
 \keyword{internal}

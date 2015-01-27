@@ -4,9 +4,13 @@
 \alias{getjurisdictionoriginvalues}
 \title{Get jurisdiction origin values}
 \usage{
-getjurisdictionoriginvalues(...)
+getjurisdictionoriginvalues(backend = NULL, ...)
 }
 \arguments{
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
+
 \item{...}{Curl options passed on to \code{\link[httr]{GET}}}
 }
 \description{
@@ -15,6 +19,9 @@ Get jurisdiction origin values
 \examples{
 \dontrun{
 getjurisdictionoriginvalues(config=timeout(3))
+
+backend_set("localsql")
+getjurisdictionoriginvalues()
 }
 }
 \keyword{internal}

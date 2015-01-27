@@ -4,9 +4,13 @@
 \alias{getvernacularlanguages}
 \title{Provides a list of the unique languages used in the vernacular table.}
 \usage{
-getvernacularlanguages(...)
+getvernacularlanguages(backend = NULL, ...)
 }
 \arguments{
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
+
 \item{...}{Curl options passed on to \code{\link[httr]{GET}}}
 }
 \description{
@@ -14,7 +18,8 @@ Provides a list of the unique languages used in the vernacular table.
 }
 \examples{
 \dontrun{
-getvernacularlanguages(config=timeout(3))
+getvernacularlanguages("api")
+getvernacularlanguages("local")
 }
 }
 \keyword{internal}

@@ -18,6 +18,9 @@ Returns the full ITIS record for the TSN in the LSID, found by comparing the
 		TSN in the search key to the TSN field. Returns an empty result set if
   	there is no match or the TSN is invalid.
 }
+\details{
+No local SQL method yet - will try to get this sorted soon.
+}
 \examples{
 \dontrun{
 getfullrecordfromlsid("urn:lsid:itis.gov:itis_tsn:180543", config=timeout(3))

@@ -4,10 +4,14 @@
 \alias{getpublicationsfromtsn}
 \title{Returns a list of the pulications used for the TSN.}
 \usage{
-getpublicationsfromtsn(tsn, ...)
+getpublicationsfromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -17,6 +21,8 @@ Returns a list of the pulications used for the TSN.
 \examples{
 \dontrun{
 getpublicationsfromtsn(70340, config=timeout(3))
+getpublicationsfromtsn(70340, "api")
+getpublicationsfromtsn(70340, "local")
 }
 }
 \keyword{internal}

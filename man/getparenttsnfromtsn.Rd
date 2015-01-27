@@ -4,10 +4,14 @@
 \alias{getparenttsnfromtsn}
 \title{Returns the parent TSN for the entered TSN.}
 \usage{
-getparenttsnfromtsn(tsn, ...)
+getparenttsnfromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -17,6 +21,8 @@ Returns the parent TSN for the entered TSN.
 \examples{
 \dontrun{
 getparenttsnfromtsn(202385, config=timeout(3))
+getparenttsnfromtsn(202385, "api")
+getparenttsnfromtsn(202385, "local")
 }
 }
 \keyword{internal}

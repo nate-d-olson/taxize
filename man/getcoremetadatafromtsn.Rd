@@ -20,11 +20,12 @@ Get core metadata from tsn
 }
 \examples{
 \dontrun{
+library("httr")
 getcoremetadatafromtsn(28727, config=timeout(3))  # coverage and currrency data
 getcoremetadatafromtsn(183671, config=timeout(4))  # no coverage or currrency data
 
 backend_set("localsql")
-getcoremetadatafromtsn(183671)
+getcoremetadatafromtsn(tsn=183671)
 }
 }
 \keyword{internal}

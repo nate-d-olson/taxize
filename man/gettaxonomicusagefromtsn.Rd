@@ -4,10 +4,14 @@
 \alias{gettaxonomicusagefromtsn}
 \title{Returns the usage information for the TSN.}
 \usage{
-gettaxonomicusagefromtsn(tsn, ...)
+gettaxonomicusagefromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -16,7 +20,8 @@ Returns the usage information for the TSN.
 }
 \examples{
 \dontrun{
-gettaxonomicusagefromtsn(526852, config=timeout(3))
+gettaxonomicusagefromtsn(526852, "api")
+gettaxonomicusagefromtsn(526852, "local")
 }
 }
 \keyword{internal}

@@ -4,10 +4,14 @@
 \alias{getunacceptabilityreasonfromtsn}
 \title{Returns the unacceptability reason, if any, for the TSN.}
 \usage{
-getunacceptabilityreasonfromtsn(tsn, ...)
+getunacceptabilityreasonfromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -16,7 +20,8 @@ Returns the unacceptability reason, if any, for the TSN.
 }
 \examples{
 \dontrun{
-getunacceptabilityreasonfromtsn(183671, config=timeout(3))
+getunacceptabilityreasonfromtsn(183671, "api")
+getunacceptabilityreasonfromtsn(183671, "local")
 }
 }
 \keyword{internal}

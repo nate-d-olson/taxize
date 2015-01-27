@@ -4,10 +4,14 @@
 \alias{getjurisdictionaloriginfromtsn}
 \title{Get jurisdictional origin from tsn}
 \usage{
-getjurisdictionaloriginfromtsn(tsn, ...)
+getjurisdictionaloriginfromtsn(tsn, backend = NULL, ...)
 }
 \arguments{
 \item{tsn}{TSN for a taxonomic group (numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -16,7 +20,10 @@ Get jurisdictional origin from tsn
 }
 \examples{
 \dontrun{
-getjurisdictionaloriginfromtsn(2180543, config=timeout(3))
+getjurisdictionaloriginfromtsn(180543, config=timeout(3))
+
+backend_set("localsql")
+getjurisdictionaloriginfromtsn(180543)
 }
 }
 \keyword{internal}

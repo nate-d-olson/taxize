@@ -14,6 +14,9 @@ getlsidfromtsn(tsn, ...)
 \description{
 Gets the unique LSID for the TSN, or an empty result if there is no match.
 }
+\details{
+No local SQL method.
+}
 \examples{
 \dontrun{
 getlsidfromtsn(155166, config=timeout(3))

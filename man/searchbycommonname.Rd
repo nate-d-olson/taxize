@@ -4,10 +4,14 @@
 \alias{searchbycommonname}
 \title{Search for tsn by common name}
 \usage{
-searchbycommonname(x, ...)
+searchbycommonname(x, backend = NULL, ...)
 }
 \arguments{
 \item{x}{text or taxonomic serial number (TSN) (character or numeric)}
+
+\item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
+Alternatively, you can pass in one of api or localsql, which will only override the
+current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
 }
@@ -18,7 +22,11 @@ Search for tsn by common name
 \dontrun{
 searchbycommonname("american bullfrog", config=timeout(3))
 searchbycommonname("ferret-badger", config=timeout(3))
-searchbycommonname("polar bear", config=timeout(3))
+searchbycommonname("polar bear", "api")
+
+searchbycommonname("american bullfrog", "local")
+searchbycommonname("ferret-badger", "local")
+searchbycommonname("polar bear", "local")
 }
 }
 \keyword{internal}
