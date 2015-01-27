@@ -40,7 +40,6 @@ Imports:
     jsonlite,
     foreach,
     ape,
-    Taxonstand,
     reshape2,
     data.table,
     vegan,
