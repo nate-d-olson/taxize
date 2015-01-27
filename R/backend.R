@@ -25,14 +25,21 @@
 #' # set individual data sources to different settings
 #' backend_set(col = "localsql", ncbi = "localsql")
 #' backend_get()
+#'
+#' # Set username and password for COL connection
+#' backend_set(col_user="root")
 #' }
 
 #' @export
 #' @rdname backend
-backend_set <- function(itis = "api", col = itis, ncbi = itis, theplantlist = itis, path="~/.taxize_local"){
+backend_set <- function(itis = "api", col = itis, ncbi = itis, theplantlist = itis,
+  path="~/.taxize_local", col_user = NULL, col_pwd = NULL)
+{
   invisible(sapply(list(itis, col, ncbi), mb))
   options(itis_backend = itis)
   options(col_backend = col)
+  options(col_user = col_user)
+  options(col_pwd = col_pwd)
   options(ncbi_backend = ncbi)
   options(theplantlist_backend = theplantlist)
   options(taxize_path = path)
@@ -41,7 +48,7 @@ backend_set <- function(itis = "api", col = itis, ncbi = itis, theplantlist = it
 #' @export
 #' @rdname backend
 backend_get <- function(){
-  bends <- c("itis_backend","col_backend","ncbi_backend","theplantlist_backend","taxize_path")
+  bends <- c("itis_backend","col_backend","ncbi_backend","theplantlist_backend","taxize_path","col_user","col_pwd")
   structure(lapply(bends, getOption), class = "taxize_backends", .Names=bends)
 }
 

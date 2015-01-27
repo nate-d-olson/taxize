@@ -36,7 +36,7 @@ Imports:
     curl,
     stringr,
     plyr,
-    dplyr,
+    dplyr (>= 0.4.1),
     jsonlite,
     foreach,
     ape,

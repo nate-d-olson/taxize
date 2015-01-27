@@ -7,7 +7,7 @@
 \title{Set location of data acquisition.}
 \usage{
 backend_set(itis = "api", col = itis, ncbi = itis, theplantlist = itis,
-  path = "~/.taxize_local")
+  path = "~/.taxize_local", col_user = NULL, col_pwd = NULL)
 
 backend_get()
 }
@@ -44,6 +44,9 @@ backend_get()
 # set individual data sources to different settings
 backend_set(col = "localsql", ncbi = "localsql")
 backend_get()
+
+# Set username and password for COL connection
+backend_set(col_user="root")
 }
 }
 
