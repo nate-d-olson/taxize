@@ -4,7 +4,7 @@
 \alias{itis_SQL}
 \title{ITIS sql query}
 \usage{
-itis_SQL(query, dbpath)
+itis_SQL(query, user = NULL, password = NULL, ...)
 }
 \description{
 ITIS sql query

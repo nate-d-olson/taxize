@@ -7,7 +7,7 @@
 \alias{db_plantlist}
 \title{Download ITIS data}
 \usage{
-db_itis(verbose = TRUE)
+db_itis(verbose = TRUE, user = "sacmac", pwd = NULL)
 
 db_plantlist(user = NULL, pwd = NULL, verbose = TRUE)
 

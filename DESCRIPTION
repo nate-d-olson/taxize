@@ -36,7 +36,7 @@ Imports:
     curl,
     stringr,
     plyr,
-    dplyr (>= 0.4.1),
+    dplyr (<= 0.4.0),
     jsonlite,
     foreach,
     ape,
@@ -44,8 +44,8 @@ Imports:
     data.table,
     vegan,
     bold,
-    DBI,
-    RPostgreSQL
+    DBI (<= 0.3.0),
+    RPostgreSQL (<= 0.4)
 Suggests:
     testthat,
     roxygen2,

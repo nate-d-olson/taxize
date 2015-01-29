@@ -16,12 +16,12 @@
 
 #' @export
 #' @rdname db
-db_itis <- function(verbose = TRUE){
+db_itis <- function(verbose = TRUE, user = "sacmac", pwd = NULL){
   # paths
-  itis_db_url <- 'http://www.itis.gov/downloads/itisSqlite.zip'
-  itis_db_path <- path.expand('~/.taxize_local/itisSqlite.zip')
-  itis_db_path_file <- path.expand('~/.taxize_local/itisSqlite')
-  itis_final_file <- path.expand('~/.taxize_local/itis.sql')
+  itis_db_url <- 'http://www.itis.gov/downloads/itisPostgreSql.zip'
+  itis_db_path <- path.expand('~/.taxize_local/itisPostgreSql.zip')
+  itis_db_path_file <- path.expand('~/.taxize_local/itisPostgreSql')
+  itis_final_file <- path.expand('~/.taxize_local/ITIS.sql')
   # download data
   mssg(verbose, 'downloading...')
   curl_download(itis_db_url, itis_db_path, quiet=TRUE)
@@ -31,9 +31,12 @@ db_itis <- function(verbose = TRUE){
   # get file path
   dirs <- list.dirs(itis_db_path_file, full.names = TRUE)
   dir_date <- dirs[ dirs != itis_db_path_file ]
-  db_path <- list.files(dir_date, pattern = ".sqlite", full.names = TRUE)
+  db_path <- list.files(dir_date, pattern = ".sql", full.names = TRUE)
   # move database
   file.rename(db_path, itis_final_file)
+  # load database
+  mssg(verbose, "loading database...")
+  system(sprintf("psql %s %s -f %s", cl("-U ", user), cl("-p ", pwd), itis_final_file))
   # cleanup
   mssg(verbose, 'cleaning up...')
   unlink(itis_db_path)

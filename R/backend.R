@@ -33,10 +33,13 @@
 #' @export
 #' @rdname backend
 backend_set <- function(itis = "api", col = itis, ncbi = itis, theplantlist = itis,
-  path="~/.taxize_local", col_user = NULL, col_pwd = NULL)
-{
+  path="~/.taxize_local", itis_user = NULL, itis_pwd = NULL,
+  col_user = NULL, col_pwd = NULL){
+
   invisible(sapply(list(itis, col, ncbi), mb))
   options(itis_backend = itis)
+  options(itis_user = itis_user)
+  options(itis_pwd = itis_pwd)
   options(col_backend = col)
   options(col_user = col_user)
   options(col_pwd = col_pwd)

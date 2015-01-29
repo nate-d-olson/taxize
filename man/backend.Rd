@@ -7,7 +7,8 @@
 \title{Set location of data acquisition.}
 \usage{
 backend_set(itis = "api", col = itis, ncbi = itis, theplantlist = itis,
-  path = "~/.taxize_local", col_user = NULL, col_pwd = NULL)
+  path = "~/.taxize_local", itis_user = NULL, itis_pwd = NULL,
+  col_user = NULL, col_pwd = NULL)
 
 backend_get()
 }

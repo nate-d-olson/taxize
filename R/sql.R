@@ -1,10 +1,10 @@
 #' ITIS sql query
 #'
-#' @importFrom dplyr src_sqlite src_postgres src_mysql tbl sql collect %>%
+#' @importFrom dplyr src_postgres src_mysql tbl sql collect %>%
 #' @keywords internal
-itis_SQL <- function(query, dbpath){
+itis_SQL <- function(query, user = NULL, password = NULL, ...){
   # initialize connection to database
-  itis_db <- src_sqlite(dbpath)
+  itis_db <- src_postgres(dbname = "ITIS", user=user, password=password, ...)
   # query, return data.frame
   tbl(itis_db, sql(query)) %>% collect() %>% data.frame
 }
