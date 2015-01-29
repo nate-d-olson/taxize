@@ -20,7 +20,7 @@ Get expert information for the TSN.
 }
 \examples{
 \dontrun{
-getexpertsfromtsn(180544, config=timeout(3))
+getexpertsfromtsn(180544, "api")
 
 backend_set("local")
 getexpertsfromtsn(180544)

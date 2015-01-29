@@ -20,7 +20,7 @@ Get jurisdictional origin from tsn
 }
 \examples{
 \dontrun{
-getjurisdictionaloriginfromtsn(180543, config=timeout(3))
+getjurisdictionaloriginfromtsn(180543, "api")
 
 backend_set("local")
 getjurisdictionaloriginfromtsn(180543)

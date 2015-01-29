@@ -20,7 +20,7 @@ Get global species completeness from tsn
 }
 \examples{
 \dontrun{
-getglobalspeciescompletenessfromtsn(180541, config=timeout(3))
+getglobalspeciescompletenessfromtsn(180541, "api")
 
 backend_set("local")
 getglobalspeciescompletenessfromtsn(180541)

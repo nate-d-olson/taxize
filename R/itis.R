@@ -87,7 +87,7 @@ getanymatchcount <- function(x, backend=NULL, ...)
                     from taxonomic_units t
                     where t.complete_name like ", paste("'", x, "'", sep = ""))
 	  }
-	  itis_SQL(query, make_path("itis", backend_get()$taxize_path))[[1]]
+	  itis_SQL(query)[[1]]
 	} else {
 	  out <- itis_GET("getAnyMatchCount", list(srchKey = x), ...)
 	  as.numeric(xmlToList(out)$return)
@@ -119,7 +119,7 @@ getcommentdetailfromtsn <- function(tsn, backend=NULL, ...)
   if( backend == "local" ) {
     query <- paste("Select c.* from comments c inner join tu_comments_links t
               on c.comment_id = t.comment_id and tsn = ", tsn, "order by comment_time_stamp")
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getCommentDetailFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -158,7 +158,7 @@ getcommonnamesfromtsn <- function(tsn, backend = NULL, ...)
           from vernaculars v
           inner join taxonomic_units t on v.tsn = t.tsn
           and t.tsn = ", tsn, "left join taxon_authors_lkp a on a.taxon_author_id = t.taxon_author_id")
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getCommonNamesFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -191,7 +191,7 @@ getcoremetadatafromtsn <- function(tsn, backend = NULL, ...)
   if( backend == "local" ) {
     query <- paste("Select tsn, rank_id, name_usage, unaccept_reason, credibility_rtng,
         completeness_rtng, currency_rating from taxonomic_units where tsn = ", tsn)
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getCoreMetadataFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -217,7 +217,7 @@ getcoveragefromtsn <- function(tsn, backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select tsn, rank_id, completeness_rtng from taxonomic_units where tsn =", tsn)
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getCoverageFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -242,7 +242,7 @@ getcredibilityratingfromtsn <- function(tsn, backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select tsn, credibility_rtng from taxonomic_units where tsn =", tsn)
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getCredibilityRatingFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -270,7 +270,7 @@ getcredibilityratings <- function(backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select distinct credibility_rtng from taxonomic_units order by credibility_rtng")
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getCredibilityRatings", list(), ...)
     namespaces <- c(ax23="http://metadata.itis_service.itis.usgs.gov/xsd")
@@ -297,7 +297,7 @@ getcurrencyfromtsn <- function(tsn, backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select tsn, rank_id, currency_rating from taxonomic_units where tsn =", tsn)
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getCurrencyFromTSN", list(tsn = tsn), ...)
     namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd")
@@ -322,7 +322,7 @@ getdatedatafromtsn <- function(tsn, backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select initial_time_stamp, update_date from taxonomic_units where tsn = ", tsn)
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getDateDataFromTSN", list(tsn = tsn), ...)
     namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd")
@@ -348,7 +348,7 @@ getdescription <- function(...){
 #'
 #' @inheritParams getcommentdetailfromtsn
 #' @examples \dontrun{
-#' getexpertsfromtsn(180544, config=timeout(3))
+#' getexpertsfromtsn(180544, "api")
 #'
 #' backend_set("local")
 #' getexpertsfromtsn(180544)
@@ -366,7 +366,7 @@ getexpertsfromtsn <- function(tsn, backend = NULL, ...)
           from vernaculars v, experts e, vern_ref_links vr
           where vr.doc_id_prefix = e.expert_id_prefix and vr.documentation_id = e.expert_id
           and vr.vern_id = v.vern_id and vr.tsn = v.tsn and v.tsn = ", tsn, "order by expert, sort_order")
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getExpertsFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -471,7 +471,7 @@ getfullrecordfromtsn <- function(tsn, ...)
 #'
 #' @inheritParams getcommentdetailfromtsn
 #' @examples \dontrun{
-#' getgeographicdivisionsfromtsn(180543, config=timeout(3))
+#' getgeographicdivisionsfromtsn(180543, "api")
 #'
 #' backend_set("local")
 #' getgeographicdivisionsfromtsn(180543)
@@ -483,7 +483,7 @@ getgeographicdivisionsfromtsn <- function(tsn, backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select * from geographic_div where tsn = ", tsn, "order by geographic_value")
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getGeographicDivisionsFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -499,7 +499,7 @@ getgeographicdivisionsfromtsn <- function(tsn, backend = NULL, ...)
 #' current function call.
 #' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @examples \dontrun{
-#' getgeographicvalues(config=timeout(3))
+#' getgeographicvalues("api")
 #'
 #' backend_set("local")
 #' getgeographicvalues()
@@ -511,7 +511,7 @@ getgeographicvalues <- function(backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select distinct geographic_value from geographic_div order by geographic_value")
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getGeographicValues", list(), ...)
     namespaces <- c(ax21="http://metadata.itis_service.itis.usgs.gov/xsd" )
@@ -525,7 +525,7 @@ getgeographicvalues <- function(backend = NULL, ...)
 #'
 #' @inheritParams getcommentdetailfromtsn
 #' @examples \dontrun{
-#' getglobalspeciescompletenessfromtsn(180541, config=timeout(3))
+#' getglobalspeciescompletenessfromtsn(180541, "api")
 #'
 #' backend_set("local")
 #' getglobalspeciescompletenessfromtsn(180541)
@@ -537,7 +537,7 @@ getglobalspeciescompletenessfromtsn <- function(tsn, backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select tsn, rank_id, completeness_rtng from taxonomic_units where tsn =", tsn)
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getGlobalSpeciesCompletenessFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -550,7 +550,7 @@ getglobalspeciescompletenessfromtsn <- function(tsn, backend = NULL, ...)
 #'
 #' @inheritParams getcommentdetailfromtsn
 #' @examples \dontrun{
-#' gethierarchydownfromtsn(161030, config=timeout(3))
+#' gethierarchydownfromtsn(161030, "api")
 #'
 #' backend_set("local")
 #' gethierarchydownfromtsn(161030)
@@ -568,9 +568,9 @@ gethierarchydownfromtsn <- function(tsn, backend = NULL, ...)
          inner join taxon_unit_types r on r.rank_id = t.rank_id and r.kingdom_id = t.kingdom_id
          where (t.parent_tsn= ", tsn, " or t.tsn= ", tsn, ")
             and (t.name_usage='valid' or t.name_usage='accepted')")
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    temp <- itis_SQL(query)
     temp2 <- data.frame(parentTsn = temp$parent_tsn, rankName = temp$rank_name, rankId = temp$rank_id,
-                        taxonName = temp$combinedName, tsn = temp$tsn, stringsAsFactors = FALSE)
+                        taxonName = temp$combinedname, tsn = temp$tsn, stringsAsFactors = FALSE)
     temp2[!temp2$tsn %in% tsn,]
   } else {
     out <- itis_GET("getHierarchyDownFromTSN", list(tsn = tsn), ...)
@@ -585,7 +585,7 @@ gethierarchydownfromtsn <- function(tsn, backend = NULL, ...)
 #'
 #' @inheritParams getcommentdetailfromtsn
 #' @examples \dontrun{
-#' gethierarchyupfromtsn(36485, config=timeout(3))
+#' gethierarchyupfromtsn(36485, "api")
 #'
 #' backend_set("local")
 #' gethierarchyupfromtsn(36485)
@@ -603,8 +603,10 @@ gethierarchyupfromtsn <- function(tsn, backend = NULL, ...)
          left join taxon_authors_lkp a on t.taxon_author_id = a.taxon_author_id
          inner join taxon_unit_types r on r.rank_id = t.rank_id and r.kingdom_id = t.kingdom_id
          where t.tsn=", tsn)
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
-    data.frame(parentName = temp$parent_name, parentTsn = temp$parent_tsn, rankName = temp$rank_name, taxonName = temp$combinedName, tsn = temp$tsn, stringsAsFactors = FALSE)
+    temp <- itis_SQL(query)
+    data.frame(parentName = temp$parent_name, parentTsn = temp$parent_tsn,
+               rankName = temp$rank_name, taxonName = temp$combinedname,
+               tsn = temp$tsn, stringsAsFactors = FALSE)
   } else {
     out <- itis_GET("getHierarchyUpFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -617,10 +619,10 @@ gethierarchyupfromtsn <- function(tsn, backend = NULL, ...)
 #'
 #' @inheritParams getanymatchcount
 #' @examples \dontrun{
-#' getitistermsfromcommonname("buya")
+#' getitistermsfromcommonname("buya", "api")
 #'
 #' library('httr')
-#' getitistermsfromcommonname("buya", config=timeout(1))
+#' getitistermsfromcommonname("buya", "api", config=timeout(1))
 #'
 #' backend_set("local")
 #' getitistermsfromcommonname(x="buya")
@@ -635,7 +637,7 @@ getitistermsfromcommonname <- function(x, backend = NULL, ...)
         from taxonomic_units t
         left join taxon_authors_lkp a on t.taxon_author_id = a.taxon_author_id
         inner join vernaculars v on v.tsn = t.tsn and v.vernacular_name like '%s' order by t.tsn", x)
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getITISTermsFromCommonName", list(srchKey = x), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -689,7 +691,7 @@ getitisterms <- function(x, ...)
 #' backend_set("local")
 #' getitistermsfromscientificname("ursidae")
 #' getitistermsfromscientificname("Ursus")
-#' getitistermsfromscientificname("Urs")
+#' getitistermsfromscientificname("Poa")
 #' }
 #' @export
 #' @keywords internal
@@ -702,7 +704,7 @@ getitistermsfromscientificname <- function(x, backend = NULL, ...)
                         left join taxon_authors_lkp a on t.taxon_author_id = a.taxon_author_id
                         left outer join vernaculars v on v.tsn = t.tsn
                         where t.complete_name like '%s' order by t.tsn", x)
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getITISTermsFromScientificName", list(srchKey = x), ...)
     namespaces <- c(namespaces <- c(ax21 = "http://data.itis_service.itis.usgs.gov/xsd"))
@@ -727,7 +729,7 @@ getitistermsfromscientificname <- function(x, backend = NULL, ...)
 #'
 #' @inheritParams getcommentdetailfromtsn
 #' @examples \dontrun{
-#' getjurisdictionaloriginfromtsn(180543, config=timeout(3))
+#' getjurisdictionaloriginfromtsn(180543, "api")
 #'
 #' backend_set("local")
 #' getjurisdictionaloriginfromtsn(180543)
@@ -739,7 +741,7 @@ getjurisdictionaloriginfromtsn <- function(tsn, backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- sprintf("Select * from jurisdiction where tsn = %s order by jurisdiction_value", tsn)
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getJurisdictionalOriginFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -763,7 +765,7 @@ getjurisdictionaloriginfromtsn <- function(tsn, backend = NULL, ...)
 #' current function call.
 #' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @examples \dontrun{
-#' getjurisdictionoriginvalues(config=timeout(3))
+#' getjurisdictionoriginvalues("api")
 #'
 #' backend_set("local")
 #' getjurisdictionoriginvalues()
@@ -775,7 +777,7 @@ getjurisdictionoriginvalues <- function(backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- "select distinct jurisdiction_value, origin from jurisdiction order by jurisdiction_value, origin"
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getJurisdictionalOriginValues", list(), ...)
     namespaces <- c(ax23="http://metadata.itis_service.itis.usgs.gov/xsd")
@@ -803,7 +805,7 @@ getjurisdictionvalues <- function(backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- "select distinct jurisdiction_value from jurisdiction order by jurisdiction_value"
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getJurisdictionValues", list(), ...)
     namespaces <- c(ax23="http://metadata.itis_service.itis.usgs.gov/xsd")
@@ -829,7 +831,7 @@ getkingdomnamefromtsn <- function(tsn, backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- sprintf("SELECT kingdom_name as KingdomName, kingdom_id as KingdomID from kingdoms where kingdom_id=(select kingdom_id from taxonomic_units where tsn = %s)", tsn)
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getKingdomNameFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -860,7 +862,7 @@ getkingdomnames <- function(backend = NULL, ...)
                   from kingdoms k
                   inner join taxonomic_units t on t.unit_name1 = k.kingdom_name and t.parent_tsn=0
                   order by k.kingdom_id")
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getKingdomNames", list(), ...)
     namespaces <- c(ax21="http://metadata.itis_service.itis.usgs.gov/xsd")
@@ -886,7 +888,7 @@ getlastchangedate <- function(backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select max(update_date) from taxonomic_units")
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getLastChangeDate", list(), ...)
     namespaces <- c(ax21="http://metadata.itis_service.itis.usgs.gov/xsd")
@@ -926,7 +928,7 @@ getothersourcesfromtsn <- function(tsn, backend=NULL, ...)
           from vern_ref_links vr, other_sources o, vernaculars v
           where vr.doc_id_prefix = o.source_id_prefix and vr.documentation_id = o.source_id
           and vr.vern_id = v.vern_id and vr.tsn = v.tsn and v.tsn = ", tsn, "order by source, version, sort_order")
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getOtherSourcesFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -955,7 +957,7 @@ getparenttsnfromtsn <- function(tsn, backend=NULL, ...)
   if( backend == "local" ) {
     query <- paste("SELECT parent_tsn as ParentTSN from taxonomic_units WHERE",
          paste(sapply(tsn, function(x) paste("tsn =", x, sep=" "), USE.NAMES=FALSE), collapse = " OR "))
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    temp <- itis_SQL(query)
     setNames(cbind(temp, tsn), c("parentTsn", "tsn"))
   } else {
     out <- itis_GET("getParentTSNFromTSN", list(tsn = tsn), ...)
@@ -987,7 +989,7 @@ getpublicationsfromtsn <- function(tsn, backend=NULL, ...)
         From vern_ref_links vr, publications p, vernaculars v
         where vr.doc_id_prefix = p.pub_id_prefix and vr.documentation_id = p.publication_id and vr.vern_id = v.vern_id
         and vr.tsn = v.tsn and vr.tsn = ", tsn, "order by reference_author, actual_pub_date, title, publication_name, sort_order")
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getPublicationsFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -1024,7 +1026,7 @@ getranknames <- function(backend=NULL, ...)
                from taxon_unit_types t
                 inner join kingdoms k on t.kingdom_id = k.kingdom_id
                 order by t.kingdom_id, t.rank_id")
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getRankNames", list(), ...)
     namespaces <- c(ax23="http://metadata.itis_service.itis.usgs.gov/xsd")
@@ -1068,7 +1070,7 @@ getreviewyearfromtsn <- function(tsn, backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste0("Select tsn, rank_id, currency_rating from taxonomic_units where tsn = ", tsn)
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getReviewYearFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -1098,7 +1100,7 @@ getscientificnamefromtsn <- function(tsn, backend = NULL, ...)
         join kingdoms k on t.kingdom_id = k.kingdom_id
         left join taxon_authors_lkp a on t.taxon_author_id = a.taxon_author_id
         WHERE", paste0(sapply(tsn, function(x) paste("t.tsn = ", x, sep = ""), USE.NAMES=FALSE), collapse=" OR "))
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    temp <- itis_SQL(query)
     temp <- setNames(temp[, c("tsn", "unit_ind1", "unit_name1", "unit_name2",
                      "unit_ind3", "unit_name3", "combinedName")], c("tsn", "unitInd1", "unitName1", "unitName2",
                                                                     "unitInd3", "unitName3", "combinedName"))
@@ -1135,7 +1137,7 @@ getsynonymnamesfromtsn <- function(tsn, backend = NULL, ...)
          left join taxon_authors_lkp a on t.taxon_author_id = a.taxon_author_id
          inner join synonym_links s on t.tsn = s.tsn WHERE ",
          paste0(sapply(tsn, function(x) paste("s.tsn_accepted = ", x, sep = ""), USE.NAMES=FALSE), collapse=" OR "), " order by querystring")
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    temp <- itis_SQL(query)
     data.frame(name = temp$combinedName, tsn = temp$tsn, stringsAsFactors = FALSE)
   } else {
     out <- itis_GET("getSynonymNamesFromTSN", list(tsn = tsn), ...)
@@ -1173,7 +1175,7 @@ gettaxonauthorshipfromtsn <- function(tsn, backend = NULL, ...)
         from taxonomic_units t
         inner join taxon_authors_lkp a on t.taxon_author_id = a.taxon_author_id WHERE",
           paste0(sapply(tsn, function(x) paste("t.tsn = ", x, sep = ""), USE.NAMES=FALSE), collapse=" OR "))
-    itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    itis_SQL(query)
   } else {
     out <- itis_GET("getTaxonAuthorshipFromTSN", list(tsn = tsn), ...)
     namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
@@ -1198,7 +1200,7 @@ gettaxonomicranknamefromtsn <- function(tsn, backend = NULL, ...)
     query <- paste("SELECT t.kingdom_id, t.rank_id, t.tsn, r.rank_name, k.kingdom_name from taxonomic_units t
         inner join taxon_unit_types r on r.rank_id = t.rank_id
         inner join kingdoms k on k.kingdom_id = t.kingdom_id WHERE", paste0(sapply(tsn, function(x) paste("t.tsn = ", x, sep = ""), USE.NAMES=FALSE), collapse=" OR "))
-    temp <- unique(itis_SQL(query, make_path("itis", backend_get()$taxize_path)))
+    temp <- unique(itis_SQL(query))
     data.frame(kingdomId = temp$kingdom_id, kingdomName = temp$kingdom_name,
                rankId = temp$rank_id, rankName = temp$rank_name, tsn = temp$tsn, stringsAsFactors = FALSE)
   } else {
@@ -1224,7 +1226,7 @@ gettaxonomicusagefromtsn <- function(tsn, backend = NULL, ...)
   if( backend == "local" ) {
     query <- paste("select tsn, name_usage from taxonomic_units where ",
                    paste0(sapply(tsn, function(x) paste("tsn = ", x, sep = ""), USE.NAMES=FALSE), collapse=" OR "))
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    temp <- itis_SQL(query)
     data.frame(taxonUsageRating = temp$name_usage, tsn = temp$tsn, stringsAsFactors = FALSE)
   } else {
     out <- itis_GET("getTaxonomicUsageFromTSN", list(tsn = tsn), ...)
@@ -1255,7 +1257,7 @@ gettsnbyvernacularlanguage <- function(language, backend = NULL, ...)
     query <- paste("select",
         paste("CASE", paste(sapply(language, function(x) paste("WHEN language LIKE ", paste("'", x, "'", sep = ""), " THEN ", paste0("'",x,"'"), sep = ""), USE.NAMES=FALSE),collapse=" "),"END AS querystring,"),
         "tsn, vernacular_name from vernaculars where ", paste0(" language like ", sapply(language, function(x) paste("'", x, "'", sep = ""),USE.NAMES=FALSE),collapse=" OR "), " order by tsn, vernacular_name")
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    temp <- itis_SQL(query)
     data.frame(language = temp$querystring, comname = temp$vernacular_name, tsn = temp$tsn, stringsAsFactors = FALSE)
   } else {
     out <- itis_GET("getTsnByVernacularLanguage", list(language = language), ...)
@@ -1298,7 +1300,7 @@ getunacceptabilityreasonfromtsn <- function(tsn, backend = NULL, ...)
   if( backend == "local" ) {
     query <- paste("SELECT tsn, unaccept_reason FROM taxonomic_units WHERE",
          paste(sapply(tsn, function(x) paste("tsn = ", x, sep = ""), USE.NAMES=FALSE), collapse=" OR "))
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    temp <- itis_SQL(query)
     data.frame(tsn = temp$tsn, unacceptReason = temp$unaccept_reason, stringsAsFactors = FALSE)
   } else {
     out <- itis_GET("getUnacceptabilityReasonFromTSN", list(tsn = tsn), ...)
@@ -1325,7 +1327,7 @@ getvernacularlanguages <- function(backend = NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- "select distinct language from vernaculars order by language"
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    temp <- itis_SQL(query)
     data.frame(languageNames = temp$language, stringsAsFactors = FALSE)
   } else {
     out <- itis_GET("getVernacularLanguages", list(), ...)
@@ -1358,7 +1360,7 @@ searchbycommonname <- function(x, backend = NULL, ...)
       paste("CASE", paste(sapply(x, function(y) paste("WHEN v.vernacular_name LIKE ", paste("'%", y, "%'", sep = ""), " THEN ", paste0("'",y,"'"), sep = ""), USE.NAMES=FALSE), collapse=" "),"END AS querystring,"),
       "v.tsn as tsn, v.language as language, v.vernacular_name as commonName, t.complete_name as combinedName from vernaculars v inner join taxonomic_units t on v.tsn = t.tsn WHERE",
       paste(sapply(x, function(y) paste("v.vernacular_name like ", paste("'%", y, "%'", sep = ""), sep = ""), USE.NAMES=FALSE),collapse=" OR "), " order by querystring")
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    temp <- itis_SQL(query)
     data.frame(comname = temp$commonName, sciname = temp$combinedName, lang = temp$language, tsn = temp$tsn, stringsAsFactors = FALSE)
   } else {
     out <- itis_GET("searchByCommonName", list(srchKey = x), ...)
@@ -1415,7 +1417,7 @@ searchbycommonnamebeginswith <- function(x, backend = NULL, ...)
         from vernaculars v
         inner join taxonomic_units t on v.tsn = t.tsn WHERE",
         paste(sapply(x, function(y) paste("v.vernacular_name like ", paste("'", y, "%'", sep = ""), sep = ""), USE.NAMES=FALSE), collapse=" OR "), " order by querystring")
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    temp <- itis_SQL(query)
     data.frame(comname = temp$commonName, sciname = temp$combinedName, lang = temp$language, tsn = temp$tsn, stringsAsFactors = FALSE)
   } else {
     out <- itis_GET("searchByCommonNameBeginsWith", list(srchKey = x), ...)
@@ -1451,7 +1453,7 @@ searchbycommonnameendswith <- function(x, backend = NULL, ...)
       inner join taxonomic_units t on v.tsn = t.tsn WHERE",
       paste(sapply(x, function(y) paste("v.vernacular_name like ", paste("'%", y, "'", sep = ""), sep = ""), USE.NAMES=FALSE),collapse=" OR "), " order by querystring")
 
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    temp <- itis_SQL(query)
     data.frame(comname = temp$commonName, sciname = temp$combinedName, lang = temp$language, tsn = temp$tsn, stringsAsFactors = FALSE)
   } else {
     out <- itis_GET("searchByCommonNameEndsWith", list(srchKey = x), ...)
@@ -1487,7 +1489,7 @@ searchbyscientificname <- function(x, backend = NULL, ...)
       FROM taxonomic_units t
       WHERE",
       paste(sapply(x, function(y) paste("t.complete_name like ", paste("'%", y, "%'", sep = ""), sep = ""), USE.NAMES=FALSE),collapse=" OR "), " order by querystring")
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    temp <- itis_SQL(query)
     data.frame(combinedname = temp$combinedName, tsn = temp$tsn, stringsAsFactors = FALSE)
   } else {
     out <- itis_GET("searchByScientificName", list(srchKey = x), ...)
@@ -1513,7 +1515,7 @@ searchforanymatch <- function(x, backend=NULL, ...)
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- get_query(x)
-    temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
+    temp <- itis_SQL(query)
     get_df(x, temp)
   } else {
     out <- itis_GET("searchForAnyMatch", list(srchKey = x), ...)

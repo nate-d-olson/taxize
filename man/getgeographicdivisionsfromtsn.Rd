@@ -20,7 +20,7 @@ Get geographic divisions from tsn
 }
 \examples{
 \dontrun{
-getgeographicdivisionsfromtsn(180543, config=timeout(3))
+getgeographicdivisionsfromtsn(180543, "api")
 
 backend_set("local")
 getgeographicdivisionsfromtsn(180543)

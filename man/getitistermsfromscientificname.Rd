@@ -26,7 +26,7 @@ getitistermsfromscientificname("Ursus")
 backend_set("local")
 getitistermsfromscientificname("ursidae")
 getitistermsfromscientificname("Ursus")
-getitistermsfromscientificname("Urs")
+getitistermsfromscientificname("Poa")
 }
 }
 \keyword{internal}

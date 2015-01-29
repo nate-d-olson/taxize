@@ -20,7 +20,7 @@ Get hierarchy down from tsn
 }
 \examples{
 \dontrun{
-gethierarchydownfromtsn(161030, config=timeout(3))
+gethierarchydownfromtsn(161030, "api")
 
 backend_set("local")
 gethierarchydownfromtsn(161030)

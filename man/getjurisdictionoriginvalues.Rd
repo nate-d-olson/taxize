@@ -18,7 +18,7 @@ Get jurisdiction origin values
 }
 \examples{
 \dontrun{
-getjurisdictionoriginvalues(config=timeout(3))
+getjurisdictionoriginvalues("api")
 
 backend_set("local")
 getjurisdictionoriginvalues()

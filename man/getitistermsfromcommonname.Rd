@@ -20,10 +20,10 @@ Get itis terms from common names
 }
 \examples{
 \dontrun{
-getitistermsfromcommonname("buya")
+getitistermsfromcommonname("buya", "api")
 
 library('httr')
-getitistermsfromcommonname("buya", config=timeout(1))
+getitistermsfromcommonname("buya", "api", config=timeout(1))
 
 backend_set("local")
 getitistermsfromcommonname(x="buya")
