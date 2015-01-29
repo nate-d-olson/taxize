@@ -15,6 +15,55 @@ The functions in the package that hit a specific API have a prefix and suffix se
 
 You need API keys for Encyclopedia of Life (EOL), the Universal Biological Indexer and Organizer (uBio), Tropicos, and Plantminer.
 
+## Local data in SQL 
+
+Some data sources have functions in `taxize` that you can use with a local SQL version of the database that you'd otherwise access via a web API. The local SQL version can be advantageous because with requests for large amounts of data, the local version should be much faster. With small data requests, you may not notice much difference, however. The data sources that currently have local SQL support, or will soon have, and some note about each:
+
+<table>
+<colgroup>
+<col style="text-align:left;"/>
+<col style="text-align:left;"/>
+<col style="text-align:left;"/>
+<col style="text-align:left;"/>
+</colgroup>
+
+<thead>
+<tr>
+  <th style="text-align:left;">Source</th>
+	<th style="text-align:left;">Database type</th>
+	<th style="text-align:left;">Ready to use?</th>
+	<th style="text-align:left;">Notes</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+	<td style="text-align:left;">ITIS</td>
+	<td style="text-align:left;">PostgreSQL</td>
+	<td style="text-align:left;">Yes</td>
+	<td style="text-align:left;">...</td>
+</tr>
+<tr>
+	<td style="text-align:left;">Theplantlist</td>
+	<td style="text-align:left;">PostgreSQL</td>
+	<td style="text-align:left;">Yes</td>
+	<td style="text-align:left;">The Postgres DB is actually made by us from csv files</td>
+</tr>
+<tr>
+	<td style="text-align:left;">COL</td>
+	<td style="text-align:left;">MySQL</td>
+	<td style="text-align:left;">Yes</td>
+	<td style="text-align:left;">We are trying to move to all using PostgreSQL, but for now this is in MySQL</td>
+</tr>
+<tr>
+	<td style="text-align:left;">NCBI</td>
+	<td style="text-align:left;">???</td>
+	<td style="text-align:left;">No</td>
+	<td style="text-align:left;">Dump files need to be arranged manually - we're still working on this</td>
+</tr>
+</tbody>
+</table>
+
 ## SOAP
 
 Note that a few data sources require SOAP web services, which are difficult to support in R across all operating systems. These include: World Register of Marine Species, Pan-European Species directories Infrastructure , and Mycobank, so far. Data sources that use SOAP web services have been moved to a new package called `taxizesoap`. Find it at [https://github.com/ropensci/taxizesoap](https://github.com/ropensci/taxizesoap).
@@ -194,6 +243,7 @@ Alot of `taxize` revolves around taxonomic identifiers. Because, as you know, na
 
 ```r
 uids <- get_uid(c("Chironomus riparius", "Chaetopteryx"))
+#> Error in value[[3L]](cond): Empty reply from server
 ```
 
 ### Retrieve classifications
@@ -203,24 +253,9 @@ Classifications - think of a species, then all the taxonomic ranks up from that 
 
 ```r
 out <- classification(uids)
+#> Error in classification(uids): object 'uids' not found
 lapply(out, head)
-#> $`315576`
-#>                 name         rank
-#> 1 cellular organisms      no rank
-#> 2          Eukaryota superkingdom
-#> 3       Opisthokonta      no rank
-#> 4            Metazoa      kingdom
-#> 5          Eumetazoa      no rank
-#> 6          Bilateria      no rank
-#> 
-#> $`492549`
-#>                 name         rank
-#> 1 cellular organisms      no rank
-#> 2          Eukaryota superkingdom
-#> 3       Opisthokonta      no rank
-#> 4            Metazoa      kingdom
-#> 5          Eumetazoa      no rank
-#> 6          Bilateria      no rank
+#> Error in lapply(out, head): object 'out' not found
 ```
 
 ### Immediate children
@@ -230,41 +265,7 @@ Get immediate children of _Salmo_. In this case, _Salmo_ is a genus, so this giv
 
 ```r
 children("Salmo", db = 'ncbi')
-#> $Salmo
-#>    childtaxa_id                   childtaxa_name childtaxa_rank
-#> 1       1509524  Salmo marmoratus x Salmo trutta        species
-#> 2       1484545 Salmo cf. cenerinus BOLD:AAB3872        species
-#> 3       1483130               Salmo zrmanjaensis        species
-#> 4       1483129               Salmo visovacensis        species
-#> 5       1483128                Salmo rhodanensis        species
-#> 6       1483127                 Salmo pellegrini        species
-#> 7       1483126                     Salmo opimus        species
-#> 8       1483125                Salmo macedonicus        species
-#> 9       1483124                Salmo lourosensis        species
-#> 10      1483123                   Salmo labecula        species
-#> 11      1483122                  Salmo farioides        species
-#> 12      1483121                      Salmo chilo        species
-#> 13      1483120                     Salmo cettii        species
-#> 14      1483119                  Salmo cenerinus        species
-#> 15      1483118                   Salmo aphelios        species
-#> 16      1483117                    Salmo akairos        species
-#> 17      1201173               Salmo peristericus        species
-#> 18      1035833                   Salmo ischchan        species
-#> 19       700588                     Salmo labrax        species
-#> 20       237411              Salmo obtusirostris        species
-#> 21       235141              Salmo platycephalus        species
-#> 22       234793                    Salmo letnica        species
-#> 23        62065                  Salmo ohridanus        species
-#> 24        33518                 Salmo marmoratus        species
-#> 25        33516                    Salmo fibreni        species
-#> 26        33515                     Salmo carpio        species
-#> 27         8032                     Salmo trutta        species
-#> 28         8030                      Salmo salar        species
-#> 
-#> attr(,"class")
-#> [1] "children"
-#> attr(,"db")
-#> [1] "ncbi"
+#> Error in function (type, msg, asError = TRUE) : Empty reply from server
 ```
 
 ### Downstream children to a rank
@@ -274,20 +275,7 @@ Get all species in the genus _Apis_
 
 ```r
 downstream("Apis", db = 'itis', downto = 'Species', verbose = FALSE)
-#> $Apis
-#>      tsn parentname parenttsn          taxonname rankid rankname
-#> 1 154396       Apis    154395     Apis mellifera    220  Species
-#> 2 763550       Apis    154395 Apis andreniformis    220  Species
-#> 3 763551       Apis    154395        Apis cerana    220  Species
-#> 4 763552       Apis    154395       Apis dorsata    220  Species
-#> 5 763553       Apis    154395        Apis florea    220  Species
-#> 6 763554       Apis    154395 Apis koschevnikovi    220  Species
-#> 7 763555       Apis    154395   Apis nigrocincta    220  Species
-#> 
-#> attr(,"class")
-#> [1] "downstream"
-#> attr(,"db")
-#> [1] "itis"
+#> Error in function (type, msg, asError = TRUE) : Empty reply from server
 ```
 
 ### Upstream taxa
@@ -297,22 +285,7 @@ Get all genera up from the species _Pinus contorta_ (this includes the genus of 
 
 ```r
 upstream("Pinus contorta", db = 'itis', upto = 'Genus', verbose=FALSE)
-#> $`Pinus contorta`
-#>      tsn parentname parenttsn   taxonname rankid rankname
-#> 1  18031   Pinaceae     18030       Abies    180    Genus
-#> 2  18033   Pinaceae     18030       Picea    180    Genus
-#> 3  18035   Pinaceae     18030       Pinus    180    Genus
-#> 4 183396   Pinaceae     18030       Tsuga    180    Genus
-#> 5 183405   Pinaceae     18030      Cedrus    180    Genus
-#> 6 183409   Pinaceae     18030       Larix    180    Genus
-#> 7 183418   Pinaceae     18030 Pseudotsuga    180    Genus
-#> 8 822529   Pinaceae     18030  Keteleeria    180    Genus
-#> 9 822530   Pinaceae     18030 Pseudolarix    180    Genus
-#> 
-#> attr(,"class")
-#> [1] "upstream"
-#> attr(,"db")
-#> [1] "itis"
+#> Error in function (type, msg, asError = TRUE) : Empty reply from server
 ```
 
 ### Get synonyms
@@ -346,28 +319,7 @@ get_ids(names="Salvelinus fontinalis", db = c('ubio','ncbi'), verbose=FALSE)
 #> 4    6244425 Salvelinus fontinalis Salmonidae trinomial
 #> 5    7130714 Salvelinus fontinalis Salmonidae trinomial
 #> 6    6653671 Salvelinus fontinalis Salmonidae trinomial
-#> $ubio
-#> Salvelinus fontinalis 
-#>             "2501330" 
-#> attr(,"class")
-#> [1] "ubioid"
-#> attr(,"match")
-#> [1] "found"
-#> attr(,"uri")
-#> [1] "http://www.ubio.org/browser/details.php?namebankID=2501330"
-#> 
-#> $ncbi
-#> Salvelinus fontinalis 
-#>                "8038" 
-#> attr(,"class")
-#> [1] "uid"
-#> attr(,"match")
-#> [1] "found"
-#> attr(,"uri")
-#> [1] "http://www.ncbi.nlm.nih.gov/taxonomy/8038"
-#> 
-#> attr(,"class")
-#> [1] "ids"
+#> Error in value[[3L]](cond): Empty reply from server
 ```
 
 You can limit to certain rows when getting ids in any `get_*()` functions
@@ -406,22 +358,7 @@ Furthermore, you can just back all ids if that's your jam with the `get_*_()` fu
 
 ```r
 get_ids_(c("Chironomus riparius", "Pinus contorta"), db = 'nbn', rows=1:3)
-#> $nbn
-#> $nbn$`Chironomus riparius`
-#>   ptaxonVersionKey    searchMatchTitle    rank  nameStatus
-#> 1 NBNSYS0000027573 Chironomus riparius Species Recommended
-#> 2 NBNSYS0000023345   Paederus riparius Species Recommended
-#> 3 NHMSYS0001718042   Elaphrus riparius Species Recommended
-#> 
-#> $nbn$`Pinus contorta`
-#>   ptaxonVersionKey               searchMatchTitle       rank  nameStatus
-#> 1 NHMSYS0000494848   Pinus contorta var. contorta    Variety Recommended
-#> 2 NBNSYS0000004786                 Pinus contorta    Species Recommended
-#> 3 NHMSYS0000494848 Pinus contorta subsp. contorta Subspecies Recommended
-#> 
-#> 
-#> attr(,"class")
-#> [1] "ids"
+#> Error in function (type, msg, asError = TRUE) : Server aborted the SSL handshake
 ```
 
 ### Common names from scientific names
@@ -429,9 +366,7 @@ get_ids_(c("Chironomus riparius", "Pinus contorta"), db = 'nbn', rows=1:3)
 
 ```r
 sci2comm('Helianthus annuus', db='itis')
-#> $`Helianthus annuus`
-#> [1] "common sunflower" "sunflower"        "wild sunflower"  
-#> [4] "annual sunflower"
+#> Error in function (type, msg, asError = TRUE) : Empty reply from server
 ```
 
 ### Scientific names from common names
@@ -440,15 +375,15 @@ sci2comm('Helianthus annuus', db='itis')
 ```r
 comm2sci("black bear")
 #> $`black bear`
-#>  [1] "Ursus americanus americanus Pallas, 1780"   
-#>  [2] "Ursus americanus Pallas, 1780"              
+#>  [1] "Ursus americanus Pallas, 1780"              
+#>  [2] "Ursus americanus americanus Pallas, 1780"   
 #>  [3] "Ursus thibetanus G. [Baron] Cuvier, 1823"   
 #>  [4] "Ursus americanus floridanus Merriam, 1896"  
 #>  [5] "Ursus americanus luteolus Griffith, 1821"   
 #>  [6] "Ursus thibetanus formosanus Swinhoe, 1864"  
 #>  [7] "Ursus americanus kermodei Hornaday, 1905"   
-#>  [8] "Ursus americanus perniger J. A. Allen, 1910"
-#>  [9] "Ursus americanus eremicus Merriam, 1904"    
+#>  [8] "Ursus americanus eremicus Merriam, 1904"    
+#>  [9] "Ursus americanus perniger J. A. Allen, 1910"
 #> [10] "Ursus thibetanus ussuricus (Heude, 1901)"   
 #> [11] "Ursus thibetanus japonicus Schlegel, 1857"  
 #> [12] "Prosimulium ursinum (Edwards, 1935)"        
@@ -462,13 +397,7 @@ comm2sci("black bear")
 
 ```r
 as.uid(315567)
-#> [1] "315567"
-#> attr(,"class")
-#> [1] "uid"
-#> attr(,"match")
-#> [1] "found"
-#> attr(,"uri")
-#> [1] "http://www.ncbi.nlm.nih.gov/taxonomy/315567"
+#> Error in function (type, msg, asError = TRUE) : Empty reply from server
 ```
 
 `list` to `uid`
@@ -476,15 +405,7 @@ as.uid(315567)
 
 ```r
 as.uid(list("315567","3339","9696"))
-#> [1] "315567" "3339"   "9696"  
-#> attr(,"class")
-#> [1] "uid"
-#> attr(,"match")
-#> [1] "found" "found" "found"
-#> attr(,"uri")
-#> [1] "http://www.ncbi.nlm.nih.gov/taxonomy/315567"
-#> [2] "http://www.ncbi.nlm.nih.gov/taxonomy/3339"  
-#> [3] "http://www.ncbi.nlm.nih.gov/taxonomy/9696"
+#> Error in function (type, msg, asError = TRUE) : Empty reply from server
 ```
 
 ### Coerce taxonomic id classes to a data.frame
@@ -492,11 +413,9 @@ as.uid(list("315567","3339","9696"))
 
 ```r
 out <- as.uid(c(315567,3339,9696))
+#> Error in function (type, msg, asError = TRUE) : Empty reply from server
 (res <- data.frame(out))
-#>      ids class match                                         uri
-#> 1 315567   uid found http://www.ncbi.nlm.nih.gov/taxonomy/315567
-#> 2   3339   uid found   http://www.ncbi.nlm.nih.gov/taxonomy/3339
-#> 3   9696   uid found   http://www.ncbi.nlm.nih.gov/taxonomy/9696
+#> Error in data.frame(out): object 'out' not found
 ```
 
 ### 

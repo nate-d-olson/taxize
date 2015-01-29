@@ -22,6 +22,55 @@ The functions in the package that hit a specific API have a prefix and suffix se
 
 You need API keys for Encyclopedia of Life (EOL), the Universal Biological Indexer and Organizer (uBio), Tropicos, and Plantminer.
 
+## Local data in SQL 
+
+Some data sources have functions in `taxize` that you can use with a local SQL version of the database that you'd otherwise access via a web API. The local SQL version can be advantageous because with requests for large amounts of data, the local version should be much faster. With small data requests, you may not notice much difference, however. The data sources that currently have local SQL support, or will soon have, and some note about each:
+
+<table>
+<colgroup>
+<col style="text-align:left;"/>
+<col style="text-align:left;"/>
+<col style="text-align:left;"/>
+<col style="text-align:left;"/>
+</colgroup>
+
+<thead>
+<tr>
+  <th style="text-align:left;">Source</th>
+	<th style="text-align:left;">Database type</th>
+	<th style="text-align:left;">Ready to use?</th>
+	<th style="text-align:left;">Notes</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+	<td style="text-align:left;">ITIS</td>
+	<td style="text-align:left;">PostgreSQL</td>
+	<td style="text-align:left;">Yes</td>
+	<td style="text-align:left;">...</td>
+</tr>
+<tr>
+	<td style="text-align:left;">Theplantlist</td>
+	<td style="text-align:left;">PostgreSQL</td>
+	<td style="text-align:left;">Yes</td>
+	<td style="text-align:left;">The Postgres DB is actually made by us from csv files</td>
+</tr>
+<tr>
+	<td style="text-align:left;">COL</td>
+	<td style="text-align:left;">MySQL</td>
+	<td style="text-align:left;">Yes</td>
+	<td style="text-align:left;">We are trying to move to all using PostgreSQL, but for now this is in MySQL</td>
+</tr>
+<tr>
+	<td style="text-align:left;">NCBI</td>
+	<td style="text-align:left;">???</td>
+	<td style="text-align:left;">No</td>
+	<td style="text-align:left;">Dump files need to be arranged manually - we're still working on this</td>
+</tr>
+</tbody>
+</table>
+
 ## SOAP
 
 Note that a few data sources require SOAP web services, which are difficult to support in R across all operating systems. These include: World Register of Marine Species, Pan-European Species directories Infrastructure , and Mycobank, so far. Data sources that use SOAP web services have been moved to a new package called `taxizesoap`. Find it at [https://github.com/ropensci/taxizesoap](https://github.com/ropensci/taxizesoap).
