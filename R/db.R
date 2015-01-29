@@ -5,9 +5,8 @@
 #' @name db
 #' @param user User name
 #' @param pwd Password
-#' @param verbose (logical) Print messages. Default: TRUE
-#' @return Downloads sql database, loads it into SQLite, cleans up by removing unneeded files,
-#' and gives back path to the database
+#' @param verbose (logical) Print messages. Default: \code{TRUE}
+#' @return Downloads sql database, loads it into PostgreSQL or MySQL, cleans up unneeded files
 #' @examples \dontrun{
 #' db_itis()
 #' db_col()

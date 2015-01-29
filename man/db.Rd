@@ -14,15 +14,14 @@ db_plantlist(user = NULL, pwd = NULL, verbose = TRUE)
 db_col(user = "root", pwd = NULL, verbose = TRUE)
 }
 \arguments{
-\item{verbose}{(logical) Print messages. Default: TRUE}
+\item{verbose}{(logical) Print messages. Default: \code{TRUE}}
 
 \item{user}{User name}
 
 \item{pwd}{Password}
 }
 \value{
-Downloads sql database, loads it into SQLite, cleans up by removing unneeded files,
-and gives back path to the database
+Downloads sql database, loads it into PostgreSQL or MySQL, cleans up unneeded files
 }
 \description{
 Download ITIS data
