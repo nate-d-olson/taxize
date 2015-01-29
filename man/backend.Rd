@@ -14,12 +14,20 @@ backend_get()
 }
 \arguments{
 \item{itis,col,ncbi,theplantlist}{(character) The backend to query data from. Defaults to
-\code{api}, which means we query resources on the web. Alternatively, use \code{localsql},
+\code{api}, which means we query resources on the web. Alternatively, use \code{local},
 which uses local versions of databases on your own machine. This option does some checks
 to make sure things are setup correctly.}
 
 \item{path}{The path to store local databases. Individual databases are within this base
 path.}
+
+\item{itis_user}{ITIS user name}
+
+\item{itis_pwd}{ITIS password}
+
+\item{col_user}{Catalogue of Life user name}
+
+\item{col_pwd}{Catalogue of Life password}
 }
 \description{
 Set location of data acquisition.
@@ -28,7 +36,7 @@ Set location of data acquisition.
 All other data source parameters in \code{backend_set} inherit from the first
 \code{itis}, which is by default set to \code{itis = "api"}
 
-Note that the only option for Theplantlist data is "localsql". Alternatively, you can
+Note that the only option for Theplantlist data is "local". Alternatively, you can
 download raw csv files of their data using \code{\link[taxize]{tpl_get}}, or use
 the \code{Taxonstand} package that downloads csv files and uses regex locally in R.
 }
@@ -38,12 +46,12 @@ the \code{Taxonstand} package that downloads csv files and uses regex locally in
 backend_set("api")
 backend_get()
 
-# set all to localsql
-backend_set("localsql")
+# set all to local
+backend_set("local")
 backend_get()
 
 # set individual data sources to different settings
-backend_set(col = "localsql", ncbi = "localsql")
+backend_set(col = "local", ncbi = "local")
 backend_get()
 
 # Set username and password for COL connection

@@ -17,7 +17,7 @@
 #' @param checklist The year of the checklist to query, if you want a specific
 #' 		year's checklist instead of the lastest as default (numeric).
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' Alternatively, you can pass in one of api or local, which will only override the
 #' current function call.
 #' @details You must provide one of name or id. The other parameters (format
 #' 		and start) are optional.
@@ -37,7 +37,7 @@
 #'
 #' # Local SQL search
 #' backend_get()
-#' backend_set("localsql")
+#' backend_set("local")
 #' col_search(name="Apis")
 #' col_search(id=6932106)
 #' }
@@ -51,7 +51,7 @@ col_search <- function(name=NULL, id=NULL, start=NULL, checklist=NULL, backend=N
     backend <- mb("api")
   }
 
-  if( backend == "localsql" ){
+  if( backend == "local" ){
     if(!is.null(name)) query <- sprintf("SELECT * from _search_scientific where genus like '%s'", name)
     if(!is.null(id)) query <- sprintf("SELECT * from _search_scientific where accepted_species_id like '%s'", id)
     col_SQL(query)

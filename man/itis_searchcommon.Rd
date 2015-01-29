@@ -12,7 +12,7 @@ itis_searchcommon(x, from = "begin", backend = NULL, ...)
 \item{from}{Default is to search from beginning. Use \code{end} to serch from end.}
 
 \item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-Alternatively, you can pass in one of api or localsql, which will only override the
+Alternatively, you can pass in one of api or local, which will only override the
 current function call.}
 
 \item{...}{Curl options passed on to \code{\link[httr]{GET}}}

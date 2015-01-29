@@ -10,7 +10,7 @@ getcoremetadatafromtsn(tsn, backend = NULL, ...)
 \item{tsn}{TSN for a taxonomic group (numeric)}
 
 \item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-Alternatively, you can pass in one of api or localsql, which will only override the
+Alternatively, you can pass in one of api or local, which will only override the
 current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
@@ -24,7 +24,7 @@ library("httr")
 getcoremetadatafromtsn(28727, config=timeout(3))  # coverage and currrency data
 getcoremetadatafromtsn(183671, config=timeout(4))  # no coverage or currrency data
 
-backend_set("localsql")
+backend_set("local")
 getcoremetadatafromtsn(tsn=183671)
 }
 }

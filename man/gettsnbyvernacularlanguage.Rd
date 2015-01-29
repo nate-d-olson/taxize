@@ -11,7 +11,7 @@ gettsnbyvernacularlanguage(language, backend = NULL, ...)
 not the international language code (character)}
 
 \item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-Alternatively, you can pass in one of api or localsql, which will only override the
+Alternatively, you can pass in one of api or local, which will only override the
 current function call.}
 
 \item{...}{Curl options passed on to \code{\link[httr]{GET}}}

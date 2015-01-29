@@ -27,7 +27,7 @@ single query is 500 for terse queries and 50 for full queries).}
 year's checklist instead of the lastest as default (numeric).}
 
 \item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-Alternatively, you can pass in one of api or localsql, which will only override the
+Alternatively, you can pass in one of api or local, which will only override the
 current function call.}
 }
 \value{
@@ -55,7 +55,7 @@ col_search(id=11935941)
 
 # Local SQL search
 backend_get()
-backend_set("localsql")
+backend_set("local")
 col_search(name="Apis")
 col_search(id=6932106)
 }

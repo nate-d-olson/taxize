@@ -10,7 +10,7 @@ getcurrencyfromtsn(tsn, backend = NULL, ...)
 \item{tsn}{TSN for a taxonomic group (numeric)}
 
 \item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-Alternatively, you can pass in one of api or localsql, which will only override the
+Alternatively, you can pass in one of api or local, which will only override the
 current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
@@ -23,7 +23,7 @@ Get currency from tsn
 getcurrencyfromtsn(28727, config=timeout(3)) # currency data
 getcurrencyfromtsn(526852, config=timeout(3)) # no currency dat
 
-backend_set("localsql")
+backend_set("local")
 getcurrencyfromtsn(28727)
 }
 }

@@ -10,7 +10,7 @@ getanymatchcount(x, backend = NULL, ...)
 \item{x}{text or taxonomic serial number (TSN) (character or numeric)}
 
 \item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-Alternatively, you can pass in one of api or localsql, which will only override the
+Alternatively, you can pass in one of api or local, which will only override the
 current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
@@ -28,7 +28,7 @@ getanymatchcount(202385, config=timeout(3))
 getanymatchcount("dolphin", config=timeout(3))
 
 # local sql
-backend_set("localsql")
+backend_set("local")
 getanymatchcount(x=202385)
 getanymatchcount(x="dolphin")
 }

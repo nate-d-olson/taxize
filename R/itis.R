@@ -57,7 +57,7 @@ getacceptednamesfromtsn <- function(tsn, ...)
 #'
 #' @param x text or taxonomic serial number (TSN) (character or numeric)
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' Alternatively, you can pass in one of api or local, which will only override the
 #' current function call.
 #' @param ... optional additional curl options (debugging tools mostly)
 #' @return An integer containing the number of matches the search will return.
@@ -67,7 +67,7 @@ getacceptednamesfromtsn <- function(tsn, ...)
 #' getanymatchcount("dolphin", config=timeout(3))
 #'
 #' # local sql
-#' backend_set("localsql")
+#' backend_set("local")
 #' getanymatchcount(x=202385)
 #' getanymatchcount(x="dolphin")
 #' }
@@ -76,7 +76,7 @@ getacceptednamesfromtsn <- function(tsn, ...)
 getanymatchcount <- function(x, backend=NULL, ...)
 {
   backend <- get_back(backend)
-	if( backend == "localsql" ) {
+	if( backend == "local" ) {
 	  query <- if (is.numeric(x)) {
 	    paste("Select count(*) from taxonomic_units where tsn = ", x)
 	  } else {
@@ -98,7 +98,7 @@ getanymatchcount <- function(x, backend=NULL, ...)
 #'
 #' @param tsn TSN for a taxonomic group (numeric)
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' Alternatively, you can pass in one of api or local, which will only override the
 #' current function call.
 #' @param ... optional additional curl options (debugging tools mostly)
 #' @return A data.frame with results.
@@ -108,7 +108,7 @@ getanymatchcount <- function(x, backend=NULL, ...)
 #'
 #' # using sql locally
 #' backend_get()
-#' backend_set("localsql")
+#' backend_set("local")
 #' getcommentdetailfromtsn(tsn=180543)
 #' }
 #' @export
@@ -116,7 +116,7 @@ getanymatchcount <- function(x, backend=NULL, ...)
 getcommentdetailfromtsn <- function(tsn, backend=NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("Select c.* from comments c inner join tu_comments_links t
               on c.comment_id = t.comment_id and tsn = ", tsn, "order by comment_time_stamp")
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
@@ -144,15 +144,15 @@ get_back <- function(x){
 #' @examples \dontrun{
 #' getcommonnamesfromtsn(183833, config=timeout(1))
 #'
-#' # localsql
-#' getcommonnamesfromtsn(183833, backend="localsql")
+#' # local
+#' getcommonnamesfromtsn(183833, backend="local")
 #' }
 #' @export
 #' @keywords internal
 getcommonnamesfromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("select t.tsn as tsn, v.language as language, a.taxon_author as author,
           v.vernacular_name as commonName, t.complete_name as combinedName
           from vernaculars v
@@ -180,7 +180,7 @@ getcommonnamesfromtsn <- function(tsn, backend = NULL, ...)
 #' getcoremetadatafromtsn(28727, config=timeout(3))  # coverage and currrency data
 #' getcoremetadatafromtsn(183671, config=timeout(4))  # no coverage or currrency data
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getcoremetadatafromtsn(tsn=183671)
 #' }
 #' @export
@@ -188,7 +188,7 @@ getcommonnamesfromtsn <- function(tsn, backend = NULL, ...)
 getcoremetadatafromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("Select tsn, rank_id, name_usage, unaccept_reason, credibility_rtng,
         completeness_rtng, currency_rating from taxonomic_units where tsn = ", tsn)
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
@@ -207,7 +207,7 @@ getcoremetadatafromtsn <- function(tsn, backend = NULL, ...)
 #' getcoveragefromtsn(tsn=28727, config=timeout(4))  # coverage data
 #' getcoveragefromtsn(526852, config=timeout(4))  # no coverage data
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getcoveragefromtsn(tsn=28727)
 #' }
 #' @export
@@ -215,7 +215,7 @@ getcoremetadatafromtsn <- function(tsn, backend = NULL, ...)
 getcoveragefromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("Select tsn, rank_id, completeness_rtng from taxonomic_units where tsn =", tsn)
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -232,7 +232,7 @@ getcoveragefromtsn <- function(tsn, backend = NULL, ...)
 #' @examples \dontrun{
 #' getcredibilityratingfromtsn(526852, config=timeout(4))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getcredibilityratingfromtsn(526852)
 #' }
 #' @export
@@ -240,7 +240,7 @@ getcoveragefromtsn <- function(tsn, backend = NULL, ...)
 getcredibilityratingfromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("Select tsn, credibility_rtng from taxonomic_units where tsn =", tsn)
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -254,13 +254,13 @@ getcredibilityratingfromtsn <- function(tsn, backend = NULL, ...)
 #' Get possible credibility ratings
 #'
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' Alternatively, you can pass in one of api or local, which will only override the
 #' current function call.
 #' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @examples \dontrun{
 #' getcredibilityratings(config=timeout(3))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getcredibilityratings()
 #' }
 #' @export
@@ -268,7 +268,7 @@ getcredibilityratingfromtsn <- function(tsn, backend = NULL, ...)
 getcredibilityratings <- function(backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("select distinct credibility_rtng from taxonomic_units order by credibility_rtng")
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -287,7 +287,7 @@ getcredibilityratings <- function(backend = NULL, ...)
 #' getcurrencyfromtsn(28727, config=timeout(3)) # currency data
 #' getcurrencyfromtsn(526852, config=timeout(3)) # no currency dat
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getcurrencyfromtsn(28727)
 #' }
 #' @export
@@ -295,7 +295,7 @@ getcredibilityratings <- function(backend = NULL, ...)
 getcurrencyfromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("Select tsn, rank_id, currency_rating from taxonomic_units where tsn =", tsn)
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -312,7 +312,7 @@ getcurrencyfromtsn <- function(tsn, backend = NULL, ...)
 #' @examples \dontrun{
 #' getdatedatafromtsn(180543, config=timeout(3))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getdatedatafromtsn(180543)
 #' }
 #' @export
@@ -320,7 +320,7 @@ getcurrencyfromtsn <- function(tsn, backend = NULL, ...)
 getdatedatafromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("Select initial_time_stamp, update_date from taxonomic_units where tsn = ", tsn)
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -350,7 +350,7 @@ getdescription <- function(...){
 #' @examples \dontrun{
 #' getexpertsfromtsn(180544, config=timeout(3))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getexpertsfromtsn(180544)
 #' }
 #' @export
@@ -358,7 +358,7 @@ getdescription <- function(...){
 getexpertsfromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("Select '1' as sort_order, r.vernacular_name, NULL As language, e.*
         from reference_links r, experts e
         where r.doc_id_prefix = e.expert_id_prefix and r.documentation_id = e.expert_id
@@ -473,7 +473,7 @@ getfullrecordfromtsn <- function(tsn, ...)
 #' @examples \dontrun{
 #' getgeographicdivisionsfromtsn(180543, config=timeout(3))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getgeographicdivisionsfromtsn(180543)
 #' }
 #' @export
@@ -481,7 +481,7 @@ getfullrecordfromtsn <- function(tsn, ...)
 getgeographicdivisionsfromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("Select * from geographic_div where tsn = ", tsn, "order by geographic_value")
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -495,13 +495,13 @@ getgeographicdivisionsfromtsn <- function(tsn, backend = NULL, ...)
 #' Get all possible geographic values
 #'
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' Alternatively, you can pass in one of api or local, which will only override the
 #' current function call.
 #' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @examples \dontrun{
 #' getgeographicvalues(config=timeout(3))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getgeographicvalues()
 #' }
 #' @export
@@ -509,7 +509,7 @@ getgeographicdivisionsfromtsn <- function(tsn, backend = NULL, ...)
 getgeographicvalues <- function(backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("select distinct geographic_value from geographic_div order by geographic_value")
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -527,7 +527,7 @@ getgeographicvalues <- function(backend = NULL, ...)
 #' @examples \dontrun{
 #' getglobalspeciescompletenessfromtsn(180541, config=timeout(3))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getglobalspeciescompletenessfromtsn(180541)
 #' }
 #' @export
@@ -535,7 +535,7 @@ getgeographicvalues <- function(backend = NULL, ...)
 getglobalspeciescompletenessfromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("Select tsn, rank_id, completeness_rtng from taxonomic_units where tsn =", tsn)
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -552,7 +552,7 @@ getglobalspeciescompletenessfromtsn <- function(tsn, backend = NULL, ...)
 #' @examples \dontrun{
 #' gethierarchydownfromtsn(161030, config=timeout(3))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' gethierarchydownfromtsn(161030)
 #' }
 #' @export
@@ -560,7 +560,7 @@ getglobalspeciescompletenessfromtsn <- function(tsn, backend = NULL, ...)
 gethierarchydownfromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("select t.tsn, t.parent_tsn, t.complete_name as combinedName,
          r.rank_name, r.rank_id, a.taxon_author as author
          from taxonomic_units t
@@ -587,7 +587,7 @@ gethierarchydownfromtsn <- function(tsn, backend = NULL, ...)
 #' @examples \dontrun{
 #' gethierarchyupfromtsn(36485, config=timeout(3))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' gethierarchyupfromtsn(36485)
 #' }
 #' @export
@@ -595,7 +595,7 @@ gethierarchydownfromtsn <- function(tsn, backend = NULL, ...)
 gethierarchyupfromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("select distinct t.parent_tsn, t.tsn, l.complete_name as parent_name,
          a.taxon_author as author, t.complete_name as combinedName, r.rank_name
          from taxonomic_units t
@@ -622,7 +622,7 @@ gethierarchyupfromtsn <- function(tsn, backend = NULL, ...)
 #' library('httr')
 #' getitistermsfromcommonname("buya", config=timeout(1))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getitistermsfromcommonname(x="buya")
 #' }
 #' @export
@@ -630,7 +630,7 @@ gethierarchyupfromtsn <- function(tsn, backend = NULL, ...)
 getitistermsfromcommonname <- function(x, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- sprintf("select t.tsn, t.name_usage, t.complete_name as combinedName, v.vernacular_name, a.taxon_author as author
         from taxonomic_units t
         left join taxon_authors_lkp a on t.taxon_author_id = a.taxon_author_id
@@ -686,7 +686,7 @@ getitisterms <- function(x, ...)
 #' getitistermsfromscientificname("ursidae")
 #' getitistermsfromscientificname("Ursus")
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getitistermsfromscientificname("ursidae")
 #' getitistermsfromscientificname("Ursus")
 #' getitistermsfromscientificname("Urs")
@@ -696,7 +696,7 @@ getitisterms <- function(x, ...)
 getitistermsfromscientificname <- function(x, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- sprintf("select t.tsn, t.name_usage, t.complete_name as combinedName, v.vernacular_name, a.taxon_author as author
                         from taxonomic_units t
                         left join taxon_authors_lkp a on t.taxon_author_id = a.taxon_author_id
@@ -729,7 +729,7 @@ getitistermsfromscientificname <- function(x, backend = NULL, ...)
 #' @examples \dontrun{
 #' getjurisdictionaloriginfromtsn(180543, config=timeout(3))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getjurisdictionaloriginfromtsn(180543)
 #' }
 #' @export
@@ -737,7 +737,7 @@ getitistermsfromscientificname <- function(x, backend = NULL, ...)
 getjurisdictionaloriginfromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- sprintf("Select * from jurisdiction where tsn = %s order by jurisdiction_value", tsn)
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -759,13 +759,13 @@ getjurisdictionaloriginfromtsn <- function(tsn, backend = NULL, ...)
 #' Get jurisdiction origin values
 #'
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' Alternatively, you can pass in one of api or local, which will only override the
 #' current function call.
 #' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @examples \dontrun{
 #' getjurisdictionoriginvalues(config=timeout(3))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getjurisdictionoriginvalues()
 #' }
 #' @export
@@ -773,7 +773,7 @@ getjurisdictionaloriginfromtsn <- function(tsn, backend = NULL, ...)
 getjurisdictionoriginvalues <- function(backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- "select distinct jurisdiction_value, origin from jurisdiction order by jurisdiction_value, origin"
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -787,13 +787,13 @@ getjurisdictionoriginvalues <- function(backend = NULL, ...)
 #' Get possible jurisdiction values
 #'
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' Alternatively, you can pass in one of api or local, which will only override the
 #' current function call.
 #' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @examples \dontrun{
 #' getjurisdictionvalues(config=timeout(3))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getjurisdictionvalues()
 #' }
 #' @export
@@ -801,7 +801,7 @@ getjurisdictionoriginvalues <- function(backend = NULL, ...)
 getjurisdictionvalues <- function(backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- "select distinct jurisdiction_value from jurisdiction order by jurisdiction_value"
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -819,7 +819,7 @@ getjurisdictionvalues <- function(backend = NULL, ...)
 #' @examples \dontrun{
 #' getkingdomnamefromtsn(202385, config=timeout(3))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getkingdomnamefromtsn(202385)
 #' }
 #' @export
@@ -827,7 +827,7 @@ getjurisdictionvalues <- function(backend = NULL, ...)
 getkingdomnamefromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- sprintf("SELECT kingdom_name as KingdomName, kingdom_id as KingdomID from kingdoms where kingdom_id=(select kingdom_id from taxonomic_units where tsn = %s)", tsn)
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -841,13 +841,13 @@ getkingdomnamefromtsn <- function(tsn, backend = NULL, ...)
 #' Get all possible kingdom names
 #'
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' Alternatively, you can pass in one of api or local, which will only override the
 #' current function call.
 #' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @examples \dontrun{
 #' getkingdomnames(config=timeout(3))
 #'
-#' backend_set("localsql")
+#' backend_set("local")
 #' getkingdomnames()
 #' }
 #' @export
@@ -855,7 +855,7 @@ getkingdomnamefromtsn <- function(tsn, backend = NULL, ...)
 getkingdomnames <- function(backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("select distinct k.*, t.tsn
                   from kingdoms k
                   inner join taxonomic_units t on t.unit_name1 = k.kingdom_name and t.parent_tsn=0
@@ -872,7 +872,7 @@ getkingdomnames <- function(backend = NULL, ...)
 #' Provides the date the ITIS database was last updated.
 #'
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' Alternatively, you can pass in one of api or local, which will only override the
 #' current function call.
 #' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @examples \dontrun{
@@ -884,7 +884,7 @@ getkingdomnames <- function(backend = NULL, ...)
 getlastchangedate <- function(backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("select max(update_date) from taxonomic_units")
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -919,7 +919,7 @@ getlsidfromtsn <- function(tsn, ...) xmlToList(itis_GET("getLSIDFromTSN", list(t
 getothersourcesfromtsn <- function(tsn, backend=NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("Select '1' as sort_order, r.original_desc_ind, NULL as language, r.vernacular_name, o.*
          from reference_links r, other_sources o where r.doc_id_prefix = o.source_id_prefix
          and r.documentation_id = o.source_id and (r.vernacular_name = '' or r.vernacular_name is null) and r.tsn = ", tsn, "UNION Select '2' as sort_order,'N' AS original_desc_ind, v.language, v.vernacular_name, o.*
@@ -952,7 +952,7 @@ getothersourcesfromtsn <- function(tsn, backend=NULL, ...)
 getparenttsnfromtsn <- function(tsn, backend=NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("SELECT parent_tsn as ParentTSN from taxonomic_units WHERE",
          paste(sapply(tsn, function(x) paste("tsn =", x, sep=" "), USE.NAMES=FALSE), collapse = " OR "))
     temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
@@ -978,7 +978,7 @@ getparenttsnfromtsn <- function(tsn, backend=NULL, ...)
 getpublicationsfromtsn <- function(tsn, backend=NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("Select '1' as sort_order, r.vernacular_name, NULL as language, r.original_desc_ind, p.*
         from reference_links r, publications p
         where r.doc_id_prefix = p.pub_id_prefix and r.documentation_id = p.publication_id
@@ -1007,7 +1007,7 @@ getpublicationsfromtsn <- function(tsn, backend=NULL, ...)
 #'  their kingdom and rank ID values.
 #'
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' Alternatively, you can pass in one of api or local, which will only override the
 #' current function call.
 #' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @examples \dontrun{
@@ -1019,7 +1019,7 @@ getpublicationsfromtsn <- function(tsn, backend=NULL, ...)
 getranknames <- function(backend=NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("select k.kingdom_name, t.kingdom_id, t.rank_name, t.rank_id
                from taxon_unit_types t
                 inner join kingdoms k on t.kingdom_id = k.kingdom_id
@@ -1066,7 +1066,7 @@ getrecordfromlsid <- function(lsid, ...)
 getreviewyearfromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste0("Select tsn, rank_id, currency_rating from taxonomic_units where tsn = ", tsn)
     itis_SQL(query, make_path("itis", backend_get()$taxize_path))
   } else {
@@ -1090,7 +1090,7 @@ getreviewyearfromtsn <- function(tsn, backend = NULL, ...)
 getscientificnamefromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("select t.tsn, t.unit_ind1, t.unit_name1, t.unit_ind2, t.unit_name2,
         t.unit_ind3, t.unit_name3, t.unit_ind4, t.unit_name4,
         t.complete_name as combinedName, a.taxon_author as author, k.kingdom_name as kingdom
@@ -1127,7 +1127,7 @@ getscientificnamefromtsn <- function(tsn, backend = NULL, ...)
 getsynonymnamesfromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("SELECT",
          paste("CASE", paste(sapply(tsn, function(x) paste("WHEN s.tsn_accepted = ", x, " THEN ", x, sep = ""), USE.NAMES=FALSE), collapse=" "), "END AS querystring,"),
          "t.tsn, t.complete_name as combinedName, a.taxon_author as author
@@ -1156,7 +1156,7 @@ getsynonymnamesfromtsn <- function(tsn, backend = NULL, ...)
 #' Returns the author information for the TSN.
 #'
 #' @inheritParams getcommentdetailfromtsn
-#' @details When \code{backend="localsql"} you can pass in many TSN's in a vector, but only one
+#' @details When \code{backend="local"} you can pass in many TSN's in a vector, but only one
 #' when \code{backend="api"}
 #' @examples \dontrun{
 #' gettaxonauthorshipfromtsn(183671, "api")
@@ -1168,7 +1168,7 @@ getsynonymnamesfromtsn <- function(tsn, backend = NULL, ...)
 gettaxonauthorshipfromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("select t.tsn as tsn, a.taxon_author as author, a.update_date as date
         from taxonomic_units t
         inner join taxon_authors_lkp a on t.taxon_author_id = a.taxon_author_id WHERE",
@@ -1194,7 +1194,7 @@ gettaxonauthorshipfromtsn <- function(tsn, backend = NULL, ...)
 gettaxonomicranknamefromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("SELECT t.kingdom_id, t.rank_id, t.tsn, r.rank_name, k.kingdom_name from taxonomic_units t
         inner join taxon_unit_types r on r.rank_id = t.rank_id
         inner join kingdoms k on k.kingdom_id = t.kingdom_id WHERE", paste0(sapply(tsn, function(x) paste("t.tsn = ", x, sep = ""), USE.NAMES=FALSE), collapse=" OR "))
@@ -1221,7 +1221,7 @@ gettaxonomicranknamefromtsn <- function(tsn, backend = NULL, ...)
 gettaxonomicusagefromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("select tsn, name_usage from taxonomic_units where ",
                    paste0(sapply(tsn, function(x) paste("tsn = ", x, sep = ""), USE.NAMES=FALSE), collapse=" OR "))
     temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
@@ -1239,7 +1239,7 @@ gettaxonomicusagefromtsn <- function(tsn, backend = NULL, ...)
 #' @param language A string containing the language. This is a language string,
 #'    not the international language code (character)
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' Alternatively, you can pass in one of api or local, which will only override the
 #' current function call.
 #' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @examples \dontrun{
@@ -1251,7 +1251,7 @@ gettaxonomicusagefromtsn <- function(tsn, backend = NULL, ...)
 gettsnbyvernacularlanguage <- function(language, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("select",
         paste("CASE", paste(sapply(language, function(x) paste("WHEN language LIKE ", paste("'", x, "'", sep = ""), " THEN ", paste0("'",x,"'"), sep = ""), USE.NAMES=FALSE),collapse=" "),"END AS querystring,"),
         "tsn, vernacular_name from vernaculars where ", paste0(" language like ", sapply(language, function(x) paste("'", x, "'", sep = ""),USE.NAMES=FALSE),collapse=" OR "), " order by tsn, vernacular_name")
@@ -1295,7 +1295,7 @@ gettsnfromlsid <- function(lsid, ...)
 getunacceptabilityreasonfromtsn <- function(tsn, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("SELECT tsn, unaccept_reason FROM taxonomic_units WHERE",
          paste(sapply(tsn, function(x) paste("tsn = ", x, sep = ""), USE.NAMES=FALSE), collapse=" OR "))
     temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
@@ -1311,7 +1311,7 @@ getunacceptabilityreasonfromtsn <- function(tsn, backend = NULL, ...)
 #' Provides a list of the unique languages used in the vernacular table.
 #'
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' Alternatively, you can pass in one of api or local, which will only override the
 #' current function call.
 #' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @examples \dontrun{
@@ -1323,7 +1323,7 @@ getunacceptabilityreasonfromtsn <- function(tsn, backend = NULL, ...)
 getvernacularlanguages <- function(backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- "select distinct language from vernaculars order by language"
     temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
     data.frame(languageNames = temp$language, stringsAsFactors = FALSE)
@@ -1353,7 +1353,7 @@ getvernacularlanguages <- function(backend = NULL, ...)
 searchbycommonname <- function(x, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("SELECT",
       paste("CASE", paste(sapply(x, function(y) paste("WHEN v.vernacular_name LIKE ", paste("'%", y, "%'", sep = ""), " THEN ", paste0("'",y,"'"), sep = ""), USE.NAMES=FALSE), collapse=" "),"END AS querystring,"),
       "v.tsn as tsn, v.language as language, v.vernacular_name as commonName, t.complete_name as combinedName from vernaculars v inner join taxonomic_units t on v.tsn = t.tsn WHERE",
@@ -1378,7 +1378,7 @@ searchbycommonname <- function(x, backend = NULL, ...)
 #' @param x Search terms
 #' @param from Default is to search from beginning. Use \code{end} to serch from end.
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or localsql, which will only override the
+#' Alternatively, you can pass in one of api or local, which will only override the
 #' current function call.
 #' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @seealso searchbycommonnamebeginswith searchbycommonnameendswith
@@ -1408,7 +1408,7 @@ itis_searchcommon <- function(x, from = "begin", backend = NULL, ...) {
 searchbycommonnamebeginswith <- function(x, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("SELECT",
         paste("CASE", paste(sapply(x, function(y) paste("WHEN v.vernacular_name LIKE ", paste("'%", y, "%'", sep = ""), " THEN ", paste0("'", y,"'"), sep = ""), USE.NAMES=FALSE),collapse=" "),"END AS querystring,"),
         "v.tsn as tsn, v.language as language, v.vernacular_name as commonName, t.complete_name as combinedName
@@ -1443,7 +1443,7 @@ searchbycommonnamebeginswith <- function(x, backend = NULL, ...)
 searchbycommonnameendswith <- function(x, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("SELECT",
           paste("CASE", paste(sapply(x, function(y) paste("WHEN v.vernacular_name LIKE ", paste("'%", y, "%'", sep = ""), " THEN ", paste0("'",y,"'"), sep = ""), USE.NAMES=FALSE),collapse=" "),"END AS querystring,"),
           "v.tsn as tsn, v.language as language, v.vernacular_name as commonName, t.complete_name as combinedName
@@ -1480,7 +1480,7 @@ searchbycommonnameendswith <- function(x, backend = NULL, ...)
 searchbyscientificname <- function(x, backend = NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- paste("SELECT",
       paste("CASE", paste(sapply(x, function(y) paste("WHEN t.complete_name LIKE ", paste("'%", y, "%'", sep = ""), " THEN ", paste0("'",y,"'"), sep = ""), USE.NAMES=FALSE),collapse=" "),"END AS querystring,"),
       "t.tsn as tsn, t.complete_name as combinedName
@@ -1511,7 +1511,7 @@ searchbyscientificname <- function(x, backend = NULL, ...)
 searchforanymatch <- function(x, backend=NULL, ...)
 {
   backend <- get_back(backend)
-  if( backend == "localsql" ) {
+  if( backend == "local" ) {
     query <- get_query(x)
     temp <- itis_SQL(query, make_path("itis", backend_get()$taxize_path))
     get_df(x, temp)

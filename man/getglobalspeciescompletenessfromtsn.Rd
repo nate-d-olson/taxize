@@ -10,7 +10,7 @@ getglobalspeciescompletenessfromtsn(tsn, backend = NULL, ...)
 \item{tsn}{TSN for a taxonomic group (numeric)}
 
 \item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-Alternatively, you can pass in one of api or localsql, which will only override the
+Alternatively, you can pass in one of api or local, which will only override the
 current function call.}
 
 \item{...}{optional additional curl options (debugging tools mostly)}
@@ -22,7 +22,7 @@ Get global species completeness from tsn
 \dontrun{
 getglobalspeciescompletenessfromtsn(180541, config=timeout(3))
 
-backend_set("localsql")
+backend_set("local")
 getglobalspeciescompletenessfromtsn(180541)
 }
 }

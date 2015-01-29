@@ -30,7 +30,7 @@
 #'
 #' @examples \dontrun{
 #' backend_get()
-#' backend_set("localsql")
+#' backend_set("local")
 #'
 #' # pass in parameters to search particular fields
 #' tpl_search(genus = "Acanthus")
