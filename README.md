@@ -6,6 +6,7 @@ taxize
 
 [![Build Status](https://api.travis-ci.org/ropensci/taxize.png?branch=master)](https://travis-ci.org/ropensci/taxize)
 [![Build status](https://ci.appveyor.com/api/projects/status/6mgc02mkd8j4sq3g/branch/master)](https://ci.appveyor.com/project/sckott/taxize-175/branch/master)
+[![Coverage Status](https://coveralls.io/repos/ropensci/taxize/badge.svg)](https://coveralls.io/r/ropensci/taxize)
 
 `taxize` allows users to search over many taxonomic data sources for species names (scientific and common) and download up and downstream taxonomic hierarchical information - among other things.
 
@@ -255,7 +256,27 @@ Classifications - think of a species, then all the taxonomic ranks up from that 
 out <- classification(uids)
 #> Error in classification(uids): object 'uids' not found
 lapply(out, head)
+<<<<<<< HEAD
 #> Error in lapply(out, head): object 'out' not found
+=======
+#> $`315576`
+#>                 name         rank     id
+#> 1 cellular organisms      no rank 131567
+#> 2          Eukaryota superkingdom   2759
+#> 3       Opisthokonta      no rank  33154
+#> 4            Metazoa      kingdom  33208
+#> 5          Eumetazoa      no rank   6072
+#> 6          Bilateria      no rank  33213
+#> 
+#> $`492549`
+#>                 name         rank     id
+#> 1 cellular organisms      no rank 131567
+#> 2          Eukaryota superkingdom   2759
+#> 3       Opisthokonta      no rank  33154
+#> 4            Metazoa      kingdom  33208
+#> 5          Eumetazoa      no rank   6072
+#> 6          Bilateria      no rank  33213
+>>>>>>> master
 ```
 
 ### Immediate children
@@ -358,7 +379,26 @@ Furthermore, you can just back all ids if that's your jam with the `get_*_()` fu
 
 ```r
 get_ids_(c("Chironomus riparius", "Pinus contorta"), db = 'nbn', rows=1:3)
+<<<<<<< HEAD
 #> Error in function (type, msg, asError = TRUE) : Server aborted the SSL handshake
+=======
+#> $nbn
+#> $nbn$`Chironomus riparius`
+#>   ptaxonVersionKey    searchMatchTitle    rank  nameStatus
+#> 1 NBNSYS0000027573 Chironomus riparius Species Recommended
+#> 2 NBNSYS0000023345   Paederus riparius Species Recommended
+#> 3 NHMSYS0001719942    Quedius riparius Species Recommended
+#> 
+#> $nbn$`Pinus contorta`
+#>   ptaxonVersionKey               searchMatchTitle       rank  nameStatus
+#> 1 NHMSYS0000494848   Pinus contorta var. contorta    Variety Recommended
+#> 2 NBNSYS0000004786                 Pinus contorta    Species Recommended
+#> 3 NHMSYS0000494848 Pinus contorta subsp. contorta Subspecies Recommended
+#> 
+#> 
+#> attr(,"class")
+#> [1] "ids"
+>>>>>>> master
 ```
 
 ### Common names from scientific names
@@ -376,6 +416,7 @@ sci2comm('Helianthus annuus', db='itis')
 comm2sci("black bear")
 #> $`black bear`
 #>  [1] "Ursus americanus Pallas, 1780"              
+<<<<<<< HEAD
 #>  [2] "Ursus americanus americanus Pallas, 1780"   
 #>  [3] "Ursus thibetanus G. [Baron] Cuvier, 1823"   
 #>  [4] "Ursus americanus floridanus Merriam, 1896"  
@@ -387,6 +428,19 @@ comm2sci("black bear")
 #> [10] "Ursus thibetanus ussuricus (Heude, 1901)"   
 #> [11] "Ursus thibetanus japonicus Schlegel, 1857"  
 #> [12] "Prosimulium ursinum (Edwards, 1935)"        
+=======
+#>  [2] "Ursus americanus floridanus Merriam, 1896"  
+#>  [3] "Ursus americanus luteolus Griffith, 1821"   
+#>  [4] "Ursus thibetanus formosanus Swinhoe, 1864"  
+#>  [5] "Ursus americanus americanus Pallas, 1780"   
+#>  [6] "Ursus americanus kermodei Hornaday, 1905"   
+#>  [7] "Ursus americanus eremicus Merriam, 1904"    
+#>  [8] "Ursus americanus perniger J. A. Allen, 1910"
+#>  [9] "Ursus thibetanus ussuricus (Heude, 1901)"   
+#> [10] "Ursus thibetanus japonicus Schlegel, 1857"  
+#> [11] "Prosimulium ursinum (Edwards, 1935)"        
+#> [12] "Ursus thibetanus G. [Baron] Cuvier, 1823"   
+>>>>>>> master
 #> [13] "Pyrrharctia isabella Smith 1797"
 ```
 
