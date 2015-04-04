@@ -226,6 +226,8 @@ install.packages("taxize")
 
 #### Development version from GitHub
 
+Windows users install [Rtools](http://cran.r-project.org/bin/windows/Rtools/) first.
+
 
 ```r
 install.packages("devtools")
@@ -254,11 +256,7 @@ Classifications - think of a species, then all the taxonomic ranks up from that 
 
 ```r
 out <- classification(uids)
-#> Error in classification(uids): object 'uids' not found
 lapply(out, head)
-<<<<<<< HEAD
-#> Error in lapply(out, head): object 'out' not found
-=======
 #> $`315576`
 #>                 name         rank     id
 #> 1 cellular organisms      no rank 131567
@@ -276,7 +274,6 @@ lapply(out, head)
 #> 4            Metazoa      kingdom  33208
 #> 5          Eumetazoa      no rank   6072
 #> 6          Bilateria      no rank  33213
->>>>>>> master
 ```
 
 ### Immediate children
@@ -347,7 +344,7 @@ You can limit to certain rows when getting ids in any `get_*()` functions
 
 
 ```r
-get_ids(names="Poa annua", db=c("gbif","eol"), rows=1)
+get_ids(names="Poa annua", db = "gbif", rows=1)
 #> $gbif
 #> Poa annua 
 #> "2704179" 
@@ -357,18 +354,6 @@ get_ids(names="Poa annua", db=c("gbif","eol"), rows=1)
 #> [1] "found"
 #> attr(,"uri")
 #> [1] "http://www.gbif.org/species/2704179"
-#> 
-#> $eol
-#> Poa annua 
-#>  43518589 
-#> attr(,"class")
-#> [1] "eolid"
-#> attr(,"provider")
-#> [1] "GBIF"
-#> attr(,"match")
-#> [1] "found"
-#> attr(,"uri")
-#> [1] "http://eol.org/pages/43518589/overview"
 #> 
 #> attr(,"class")
 #> [1] "ids"
@@ -386,8 +371,8 @@ get_ids_(c("Chironomus riparius", "Pinus contorta"), db = 'nbn', rows=1:3)
 #> $nbn$`Chironomus riparius`
 #>   ptaxonVersionKey    searchMatchTitle    rank  nameStatus
 #> 1 NBNSYS0000027573 Chironomus riparius Species Recommended
-#> 2 NBNSYS0000023345   Paederus riparius Species Recommended
-#> 3 NHMSYS0001719942    Quedius riparius Species Recommended
+#> 2 NHMSYS0001718042   Elaphrus riparius Species Recommended
+#> 3 NBNSYS0000023345   Paederus riparius Species Recommended
 #> 
 #> $nbn$`Pinus contorta`
 #>   ptaxonVersionKey               searchMatchTitle       rank  nameStatus
@@ -405,16 +390,24 @@ get_ids_(c("Chironomus riparius", "Pinus contorta"), db = 'nbn', rows=1:3)
 
 
 ```r
+<<<<<<< HEAD
 sci2comm('Helianthus annuus', db='itis')
 #> Error in function (type, msg, asError = TRUE) : Empty reply from server
+=======
+sci2comm('Helianthus annuus', db = 'itis')
+#> $`Helianthus annuus`
+#> [1] "common sunflower" "sunflower"        "wild sunflower"  
+#> [4] "annual sunflower"
+>>>>>>> master
 ```
 
 ### Scientific names from common names
 
 
 ```r
-comm2sci("black bear")
+comm2sci("black bear", db = "itis")
 #> $`black bear`
+<<<<<<< HEAD
 #>  [1] "Ursus americanus Pallas, 1780"              
 <<<<<<< HEAD
 #>  [2] "Ursus americanus americanus Pallas, 1780"   
@@ -442,6 +435,12 @@ comm2sci("black bear")
 #> [12] "Ursus thibetanus G. [Baron] Cuvier, 1823"   
 >>>>>>> master
 #> [13] "Pyrrharctia isabella Smith 1797"
+=======
+#> [1] "Chiropotes satanas"          "Ursus thibetanus"           
+#> [3] "Ursus thibetanus"            "Ursus americanus luteolus"  
+#> [5] "Ursus americanus americanus" "Ursus americanus"           
+#> [7] "Ursus americanus"
+>>>>>>> master
 ```
 
 ### Coerce codes to taxonomic id classes
@@ -458,21 +457,36 @@ as.uid(315567)
 
 
 ```r
+<<<<<<< HEAD
 as.uid(list("315567","3339","9696"))
 #> Error in function (type, msg, asError = TRUE) : Empty reply from server
+=======
+as.uid(list("315567", "3339", "9696"))
+#> [1] "315567" "3339"   "9696"  
+#> attr(,"class")
+#> [1] "uid"
+#> attr(,"match")
+#> [1] "found" "found" "found"
+#> attr(,"uri")
+#> [1] "http://www.ncbi.nlm.nih.gov/taxonomy/315567"
+#> [2] "http://www.ncbi.nlm.nih.gov/taxonomy/3339"  
+#> [3] "http://www.ncbi.nlm.nih.gov/taxonomy/9696"
+>>>>>>> master
 ```
 
 ### Coerce taxonomic id classes to a data.frame
 
 
 ```r
+<<<<<<< HEAD
 out <- as.uid(c(315567,3339,9696))
 #> Error in function (type, msg, asError = TRUE) : Empty reply from server
+=======
+out <- as.uid(c(315567, 3339, 9696))
+>>>>>>> master
 (res <- data.frame(out))
 #> Error in data.frame(out): object 'out' not found
 ```
-
-### 
 
 ## Contributors
 
