@@ -19,7 +19,6 @@
 #' This function used to wrap the \code{Taxonstand} package, but now does local SQL queries,
 #' which are more powerful. If you want \code{Taxonstand} functions, we encourage you to go
 #' use that pacakge.
-#'
 #' \code{\link{tpl_search}} does a limited set of searches, simply searching for matches via
 #' \code{variable like 'name'} like queries for variables that you pass in. If you want the
 #' full power of SQL, use \code{XXX} and \code{\link{dplyr}} to interact directly with the
@@ -30,6 +29,9 @@
 #'
 #' @examples \dontrun{
 #' backend_get()
+#' splist <- c("Heliathus annuus","Abies procera","Poa annua",
+#'    "Platanus occidentalis","Carex abrupta","Arctostaphylos canescens",
+#'    "Ocimum basilicum","Vicia faba","Quercus kelloggii","Lactuca serriola")
 #' backend_set("local")
 #'
 #' # pass in parameters to search particular fields
@@ -57,22 +59,27 @@
 #'   filter(genus == "Quercus") %>%
 #'   arrange(desc(species))
 #' }
+#' @export
+#' @rdname tpl_search-defunct
+tpl_search <- function(taxon, paral = FALSE, ...) {
+  .Defunct(msg = "This function is defunct. Use the Taxonstand functions TPL or TPLck directly.")
 
-tpl_search <- function(genus = NULL, species = NULL, family = NULL, authority = NULL,
-  status = NULL, kewid = NULL, operand="AND", sql = NULL)
+  if (paral) {
+    out <- llply(taxon, function(x) TPLck(x, ...), .parallel = TRUE)
+    ldply(out)
 {
   if(!is.null(sql)){
     query <- sql
   } else {
-    args <- taxize_compact(list(genus=genus, species=species, family=family, authorship=authority,
+    out <- llply(taxon, function(x) try(TPLck(x, ...), silent = TRUE))
                                 taxonomic_status_in_tpl=status, kewid=kewid))
-    if(length(args) > 0){
+    if (any(sapply(out, class) == "try-error"))
       allargs <- list()
       for(i in seq_along(args)){
         allargs[[i]] <- sprintf("%s like '%s'", names(args[i]), args[[i]])
       }
       if(length(allargs) > 1){
-        queryargs <- paste0(allargs, collapse = sprintf(" %s ", operand))
+    out <- out[!sapply(out, class) == "try-error"]
       } else {
         queryargs <- allargs[[1]]
       }
