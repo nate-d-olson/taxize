@@ -2,6 +2,7 @@
 .Rhistory
 .Rproj.user
 taxize_.Rproj
+taxize.Rproj
 README.html
 ._README.md
 inst/doc/.texpadtmp/taxize_msNotes.bib
@@ -12,3 +13,4 @@ inst/doc/.texpadtmp/taxize_ms.log
 inst/doc/.texpadtmp/taxize_ms.out
 inst/doc/.texpadtmp/taxize_ms.synctex.gz
 .httr-oauth
+inst/vign/taxize_vignette_cache

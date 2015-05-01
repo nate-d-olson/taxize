@@ -1,6 +1,7 @@
 #' Aggregate species data to given taxonomic rank
 #'
-#' @import reshape2
+#' @importFrom reshape2 melt
+#' @importFrom reshape2 dcast
 #'
 #' @param x Community data matrix. Taxa in columns, samples in rows.
 #' @param rank character; Taxonomic rank to aggregate by.
@@ -25,6 +26,7 @@
 #' @seealso \code{\link[taxize]{tax_name}}
 #' @examples \dontrun{
 #' # use dune dataset
+#' library("vegan")
 #' data(dune, package='vegan')
 #' species <- c("Bellis perennis", "Empetrum nigrum", "Juncus bufonius",
 #' "Juncus articulatus",

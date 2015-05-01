@@ -4,8 +4,8 @@ Description: Taxonomic information from around the web. This package
     interacts with a suite of web APIs for taxonomic tasks, such
     as verifying species names, getting taxonomic hierarchies,
     and verifying name spelling.
-Version: 0.5.3.99
-Date: 2015-01-28
+Version: 0.5.2.997
+Date: 2015-04-30
 License: MIT + file LICENSE
 URL: https://github.com/ropensci/taxize
 BugReports: https://github.com/ropensci/taxize/issues
@@ -34,19 +34,20 @@ Imports:
     httr (>= 0.2),
     RCurl (>= 1.6),
     curl,
+    reshape2,
     stringr,
     plyr,
     dplyr (<= 0.4.0),
     jsonlite,
     foreach,
     ape,
-    reshape2,
+    Taxonstand,
     data.table,
-    vegan,
     bold,
     DBI (<= 0.3.0),
     RPostgreSQL (<= 0.4)
 Suggests:
     testthat,
     roxygen2,
-    knitr
+    knitr,
+    vegan

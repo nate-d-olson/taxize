@@ -242,7 +242,7 @@ library('taxize')
 
 ### Get unique taxonomic identifier from NCBI
 
-Alot of `taxize` revolves around taxonomic identifiers. Because, as you know, names can be a mess (misspelled, synonyms, etc.), it's better to get an identifier that a particular data sources knows about, then we can move forth acquiring more fun taxonomic data. 
+Alot of `taxize` revolves around taxonomic identifiers. Because, as you know, names can be a mess (misspelled, synonyms, etc.), it's better to get an identifier that a particular data sources knows about, then we can move forth acquiring more fun taxonomic data.
 
 
 ```r
@@ -372,8 +372,8 @@ get_ids_(c("Chironomus riparius", "Pinus contorta"), db = 'nbn', rows=1:3)
 #> $nbn$`Chironomus riparius`
 #>   ptaxonVersionKey    searchMatchTitle    rank  nameStatus
 #> 1 NBNSYS0000027573 Chironomus riparius Species Recommended
-#> 2 NHMSYS0001718042   Elaphrus riparius Species Recommended
-#> 3 NBNSYS0000023345   Paederus riparius Species Recommended
+#> 2 NBNSYS0000023345   Paederus riparius Species Recommended
+#> 3 NHMSYS0001718042   Elaphrus riparius Species Recommended
 #> 
 #> $nbn$`Pinus contorta`
 #>   ptaxonVersionKey               searchMatchTitle       rank  nameStatus
@@ -409,6 +409,7 @@ sci2comm('Helianthus annuus', db = 'itis')
 comm2sci("black bear", db = "itis")
 #> $`black bear`
 <<<<<<< HEAD
+<<<<<<< HEAD
 #>  [1] "Ursus americanus Pallas, 1780"              
 <<<<<<< HEAD
 #>  [2] "Ursus americanus americanus Pallas, 1780"   
@@ -441,6 +442,12 @@ comm2sci("black bear", db = "itis")
 #> [3] "Ursus thibetanus"            "Ursus americanus luteolus"  
 #> [5] "Ursus americanus americanus" "Ursus americanus"           
 #> [7] "Ursus americanus"
+>>>>>>> master
+=======
+#> [1] "Chiropotes satanas"          "Ursus americanus luteolus"  
+#> [3] "Ursus americanus americanus" "Ursus americanus"           
+#> [5] "Ursus americanus"            "Ursus thibetanus"           
+#> [7] "Ursus thibetanus"
 >>>>>>> master
 ```
 
@@ -491,7 +498,7 @@ out <- as.uid(c(315567, 3339, 9696))
 
 ## Contributors
 
-+ [Scott Chamberlain](https://github.com/SChamberlain)
++ [Scott Chamberlain](https://github.com/sckott)
 + [Eduard Szöcs](https://github.com/EDiLD)
 + [Zachary Foster](https://github.com/zachary-foster)
 + [Carl Boettiger](https://github.com/cboettig)
