@@ -5,7 +5,7 @@
 \title{Search Catalogue of Life for taxonomic IDs}
 \usage{
 col_search(name = NULL, id = NULL, start = NULL, checklist = NULL,
-  backend = NULL)
+  backend = NULL, response = "terse", ...)
 }
 \arguments{
 \item{name}{The string to search for. Only exact matches found the name given
@@ -29,6 +29,8 @@ year's checklist instead of the lastest as default (numeric).}
 \item{backend}{Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
 Alternatively, you can pass in one of api or local, which will only override the
 current function call.}
+
+\item{response}{(character) one of "terse" or "full"}
 }
 \value{
 A list of data.frame's.

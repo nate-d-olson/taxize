@@ -2,6 +2,7 @@
 #'
 #' @import RCurl XML plyr
 #' @importFrom dplyr src_mysql
+#' @export
 #' @param name The string to search for. Only exact matches found the name given
 #'   	will be returned, unless one or wildcards are included in the search
 #'   	string. An * (asterisk) character denotes a wildcard; a % (percentage)
@@ -17,8 +18,9 @@
 #' @param checklist The year of the checklist to query, if you want a specific
 #' 		year's checklist instead of the lastest as default (numeric).
 #' @param backend Defaults to NULL, deferring to options set by \code{\link{backend_set}}.
-#' Alternatively, you can pass in one of api or local, which will only override the
-#' current function call.
+#'   Alternatively, you can pass in one of api or local, which will only override the
+#'   current function call.
+#' @param response (character) one of "terse" or "full"
 #' @details You must provide one of name or id. The other parameters (format
 #' 		and start) are optional.
 #' @references \url{http://webservice.catalogueoflife.org/}
@@ -41,8 +43,10 @@
 #' col_search(name="Apis")
 #' col_search(id=6932106)
 #' }
-#' @export
-col_search <- function(name=NULL, id=NULL, start=NULL, checklist=NULL, backend=NULL){
+col_search <- function(name=NULL, id=NULL, start=NULL, checklist=NULL,
+  backend=NULL, response="terse", ...) {
+
+  response <- match.arg(response, c("terse", "full"))
 
   if( is.null(backend) ){
     bb <- backend_get()
@@ -56,57 +60,80 @@ col_search <- function(name=NULL, id=NULL, start=NULL, checklist=NULL, backend=N
     if(!is.null(id)) query <- sprintf("SELECT * from _search_scientific where accepted_species_id like '%s'", id)
     col_SQL(query)
   } else {
-    url <- "http://www.catalogueoflife.org/col/webservice"
     func <- function(x, y) {
-      if(is.null(checklist)){NULL} else {
+      if(is.null(checklist)){
+        url <- col_base()
+      } else {
         cc <- match.arg(checklist, choices = c(2012, 2011, 2010, 2009, 2008, 2007))
         if (cc %in% c(2012, 2011, 2010)){
-          url <- gsub("col", paste("annual-checklist/", cc, sep = ""), url)
+          url <- gsub("col", paste("annual-checklist/", cc, sep = ""), col_base())
         } else {
           url <- "http://webservice.catalogueoflife.org/annual-checklist/year/search.php"
           url <- gsub("year", cc, url)
         }
       }
-      args <- compact(list(name = x, id = y, start = start))
-      out <- getForm(url, .params = args)
-      tt <- xmlParse(out)
-      toget <- c('id','name','rank','name_status')
-      nodes <- getNodeSet(tt, "//result", fun=xmlToList)
-      ldply(nodes, parsecoldata)
+      args <- compact(list(name = x, id = y, start = start, response = response))
+      temp <- GET(url, query = args, ...)
+      stop_for_status(temp)
+      tt <- content(temp)
+      switch(response,
+             terse = parse_terse(tt),
+             full = parse_full(tt))
     }
     safe_func <- plyr::failwith(NULL, func)
     if(is.null(id)){
-      temp <- lapply(name, safe_func, y = NULL)
-      names(temp) <- name
+      setNames(lapply(name, safe_func, y = NULL, ...), name)
     } else {
-      temp <- lapply(id, safe_func, x = NULL)
-      names(temp) <- id
+      setNames(lapply(id, safe_func, x = NULL, ...), id)
     }
-    return(temp)
   }
 }
 
+col_base <- function() "http://www.catalogueoflife.org/col/webservice"
+
+parse_terse <- function(x) {
+  nodes <- getNodeSet(x, "//result", fun = xmlToList)
+  ldply(nodes, parsecoldata)
+}
+
+parse_full <- function(x) {
+  tmp <- getNodeSet(x, "//result")
+  taxize_ldfast(lapply(tmp, function(z) {
+    switch(xpathSApply(z, "name_status", xmlValue),
+           `accepted name` = {
+             h_vals <- xpathSApply(z, "classification//name", xmlValue)
+             h_nms <- xpathSApply(z, "classification//rank", xmlValue)
+             h <- setNames(rbind.data.frame(h_vals), h_nms)
+           },
+           synonym = {
+             h_vals <- xpathSApply(z, "accepted_name//classification//name", xmlValue)
+             h_nms <- xpathSApply(z, "accepted_name//classification//rank", xmlValue)
+             h <- setNames(rbind.data.frame(h_vals), h_nms)
+           })
+    target <- setNames(rbind.data.frame(
+      c(xpathSApply(z, "name", xmlValue),
+        xpathSApply(z, "rank", xmlValue),
+        xpathSApply(z, "id", xmlValue),
+        xpathSApply(z, "name_status", xmlValue))),
+      c("name", "rank", "id", "name_status"))
+    tempdf <- cbind(target, h)
+    tempdf[] <- lapply(tempdf, as.character)
+    tempdf
+  }))
+}
+
 parsecoldata <- function(x){
-  vals <- x[c('id','name','rank','name_status','source_database')]
+  vals <- x[c('id', 'name', 'rank', 'name_status', 'source_database')]
   vals[sapply(vals, is.null)] <- NA
-  names(vals) <- c('id','name','rank','name_status','source_database')
-  bb <- data.frame(vals, stringsAsFactors=FALSE)
-  names(bb)[4:5] <- c('status','source')
+  names(vals) <- c('id', 'name', 'rank', 'name_status', 'source_database')
+  bb <- data.frame(vals, stringsAsFactors = FALSE)
+  names(bb)[4:5] <- c('status', 'source')
   acc <- x$accepted_name
-  if(is.null(acc)){
+  if (is.null(acc)) {
     accdf <- data.frame(acc_id=NA, acc_name=NA, acc_rank=NA, acc_status=NA, acc_source=NA, stringsAsFactors = FALSE)
-  } else
-  {
+  } else {
     accdf <- data.frame(acc[c('id','name','rank','name_status','source_database')], stringsAsFactors=FALSE)
     names(accdf) <- c('acc_id','acc_name','acc_rank','acc_status','acc_source')
   }
   cbind(bb, accdf)
 }
-
-#
-# col_search_sql <- function(name=NULL, id=NULL, start=NULL, checklist=NULL, backend=NULL){
-#
-#   if(!is.null(name)) query <- sprintf("SELECT * from _search_scientific where genus like '%s'", name)
-#   if(!is.null(id)) query <- sprintf("SELECT * from _search_scientific where accepted_species_id like '%s'", id)
-#   col_SQL(query)
-# }
