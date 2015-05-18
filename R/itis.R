@@ -1,26 +1,27 @@
 itbase <- function() 'http://www.itis.gov/ITISWebService/services/ITISService/'
 
 itis_GET <- function(endpt, args, ...){
+  if (length(args) == 0) args <- NULL
   tt <- GET(paste0(itbase(), endpt), query = args, ...)
   xmlParse(content(tt, "text"))
 }
 
 itis_parse <- function(a, b, d){
   xpathfunc <- function(x, y, nsp) {
-    sapply(getNodeSet(y, paste("//ax21:", x, sep=''), namespaces=nsp), xmlValue)
+    sapply(getNodeSet(y, paste("//ax21:", x, sep = ''), namespaces = nsp), xmlValue)
   }
-  df <- setNames(data.frame(t(sapply(a, xpathfunc, y=b, nsp=d))), a)
+  df <- setNames(data.frame(t(sapply(a, xpathfunc, y = b, nsp = d))), a)
   colClasses(df, "character")
 }
 
 itisdf <- function(a, b, matches, colnames, pastens="ax21"){
   matches <- paste0(sprintf('//%s:', pastens), matches)
   output <- c()
-  for(i in seq_along(matches)){
-    nodes <- getNodeSet(a, matches[[i]], namespaces=b)
+  for (i in seq_along(matches)) {
+    nodes <- getNodeSet(a, matches[[i]], namespaces = b)
     output[[i]] <- sapply(nodes, xmlValue)
   }
-  if(all(sapply(output, length) == 1))
+  if (all(sapply(output, length) == 1))
     setNames(data.frame(t(output), stringsAsFactors = FALSE), colnames)
   else
     setNames(data.frame(output), colnames)
@@ -42,11 +43,10 @@ itisdf <- function(a, b, matches, colnames, pastens="ax21"){
 #' }
 #' @export
 #' @keywords internal
-getacceptednamesfromtsn <- function(tsn, ...)
-{
+getacceptednamesfromtsn <- function(tsn, ...) {
   tt_ <- itis_GET("getAcceptedNamesFromTSN", list(tsn = tsn), ...)
 	temp <- xmlToList(tt_)
-	if(length(temp$return$acceptedNames) == 1) {
+	if (length(temp$return$acceptedNames) == 1) {
     temp$return$tsn
   } else {
 		c(submittedTsn = temp$return$tsn, temp$return$acceptedNames[1:2])
@@ -73,8 +73,7 @@ getacceptednamesfromtsn <- function(tsn, ...)
 #' }
 #' @export
 #' @keywords internal
-getanymatchcount <- function(x, backend=NULL, ...)
-{
+getanymatchcount <- function(x, backend=NULL, ...) {
   backend <- get_back(backend)
 	if( backend == "local" ) {
 	  query <- if (is.numeric(x)) {
@@ -113,8 +112,7 @@ getanymatchcount <- function(x, backend=NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getcommentdetailfromtsn <- function(tsn, backend=NULL, ...)
-{
+getcommentdetailfromtsn <- function(tsn, backend=NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select c.* from comments c inner join tu_comments_links t
@@ -149,8 +147,7 @@ get_back <- function(x){
 #' }
 #' @export
 #' @keywords internal
-getcommonnamesfromtsn <- function(tsn, backend = NULL, ...)
-{
+getcommonnamesfromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select t.tsn as tsn, v.language as language, a.taxon_author as author,
@@ -185,8 +182,7 @@ getcommonnamesfromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getcoremetadatafromtsn <- function(tsn, backend = NULL, ...)
-{
+getcoremetadatafromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select tsn, rank_id, name_usage, unaccept_reason, credibility_rtng,
@@ -212,8 +208,7 @@ getcoremetadatafromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getcoveragefromtsn <- function(tsn, backend = NULL, ...)
-{
+getcoveragefromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select tsn, rank_id, completeness_rtng from taxonomic_units where tsn =", tsn)
@@ -237,8 +232,7 @@ getcoveragefromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getcredibilityratingfromtsn <- function(tsn, backend = NULL, ...)
-{
+getcredibilityratingfromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select tsn, credibility_rtng from taxonomic_units where tsn =", tsn)
@@ -265,8 +259,7 @@ getcredibilityratingfromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getcredibilityratings <- function(backend = NULL, ...)
-{
+getcredibilityratings <- function(backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select distinct credibility_rtng from taxonomic_units order by credibility_rtng")
@@ -292,8 +285,7 @@ getcredibilityratings <- function(backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getcurrencyfromtsn <- function(tsn, backend = NULL, ...)
-{
+getcurrencyfromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select tsn, rank_id, currency_rating from taxonomic_units where tsn =", tsn)
@@ -317,8 +309,7 @@ getcurrencyfromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getdatedatafromtsn <- function(tsn, backend = NULL, ...)
-{
+getdatedatafromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select initial_time_stamp, update_date from taxonomic_units where tsn = ", tsn)
@@ -355,8 +346,7 @@ getdescription <- function(...){
 #' }
 #' @export
 #' @keywords internal
-getexpertsfromtsn <- function(tsn, backend = NULL, ...)
-{
+getexpertsfromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select '1' as sort_order, r.vernacular_name, NULL As language, e.*
@@ -391,24 +381,22 @@ getexpertsfromtsn <- function(tsn, backend = NULL, ...)
 #' @export
 #' @keywords internal
 
-getfullhierarchyfromtsn <- function(tsn, ...)
-{
-
+getfullhierarchyfromtsn <- function(tsn, ...) {
 	out <- itis_GET("getFullHierarchyFromTSN", list(tsn = tsn), ...)
-  namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
-  nodes <- getNodeSet(out, "//ax21:parentName", namespaces=namespaces)
+  namespaces <- c(namespaces <- c(ax21 = "http://data.itis_service.itis.usgs.gov/xsd"))
+  nodes <- getNodeSet(out, "//ax21:parentName", namespaces = namespaces)
   parentName <- sapply(nodes, xmlValue)
-  nodes <- getNodeSet(out, "//ax21:parentTsn", namespaces=namespaces)
+  nodes <- getNodeSet(out, "//ax21:parentTsn", namespaces = namespaces)
   parentTsn <- sapply(nodes, xmlValue)
-  nodes <- getNodeSet(out, "//ax21:rankName", namespaces=namespaces)
+  nodes <- getNodeSet(out, "//ax21:rankName", namespaces = namespaces)
   rankName <- sapply(nodes, xmlValue)
-  nodes <- getNodeSet(out, "//ax21:taxonName", namespaces=namespaces)
+  nodes <- getNodeSet(out, "//ax21:taxonName", namespaces = namespaces)
   taxonName <- sapply(nodes, xmlValue)
-  nodes <- getNodeSet(out, "//ax21:tsn", namespaces=namespaces)
+  nodes <- getNodeSet(out, "//ax21:tsn", namespaces = namespaces)
   tsn <- sapply(nodes, xmlValue)
-	data.frame(parentName=parentName, parentTsn=parentTsn,
-	           rankName=rankName[-length(rankName)],
-	           taxonName=taxonName, tsn=tsn[-1], stringsAsFactors=FALSE)
+	data.frame(parentName = parentName, parentTsn = parentTsn,
+	           rankName = rankName[-length(rankName)],
+	           taxonName = taxonName, tsn = tsn[-1], stringsAsFactors = FALSE)
 }
 
 #' Returns the full ITIS record for the TSN in the LSID, found by comparing the
@@ -424,17 +412,16 @@ getfullhierarchyfromtsn <- function(tsn, ...)
 #' }
 #' @export
 #' @keywords internal
-getfullrecordfromlsid <- function(lsid, ...)
-{
+getfullrecordfromlsid <- function(lsid, ...) {
 	out <- itis_GET("getFullRecordFromLSID", list(lsid = lsid), ...)
-	namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd")
+	namespaces <- c(ax21 = "http://data.itis_service.itis.usgs.gov/xsd")
 	toget <- c("acceptedNameList","commentList","commonNameList","completenessRating",
 	           "coreMetadata","credibilityRating","currencyRating","dateData","expertList",
 	           "geographicDivisionList","hierarchyUp","jurisdictionalOriginList",
 	           "kingdom","otherSourceList","parentTSN","publicationList","scientificName",
 	           "synonymList","taxRank","taxonAuthor","unacceptReason","usage")
 	parsedat <- function(x){
-	  tmp <- getNodeSet(out, sprintf("//ax21:%s",x), namespaces=namespaces, xmlToList)[[1]]
+	  tmp <- getNodeSet(out, sprintf("//ax21:%s",x), namespaces = namespaces, xmlToList)[[1]]
 	  tmp[!names(tmp) %in% ".attrs"]
 	}
 	setNames(lapply(toget, parsedat), toget)
@@ -451,17 +438,16 @@ getfullrecordfromlsid <- function(lsid, ...)
 #' }
 #' @export
 #' @keywords internal
-getfullrecordfromtsn <- function(tsn, ...)
-{
+getfullrecordfromtsn <- function(tsn, ...) {
 	out <- itis_GET("getFullRecordFromTSN", list(tsn = tsn), ...)
-	namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd")
+	namespaces <- c(ax21 = "http://data.itis_service.itis.usgs.gov/xsd")
   toget <- c("acceptedNameList","commentList","commonNameList","completenessRating",
              "coreMetadata","credibilityRating","currencyRating","dateData","expertList",
              "geographicDivisionList","hierarchyUp","jurisdictionalOriginList",
              "kingdom","otherSourceList","parentTSN","publicationList","scientificName",
              "synonymList","taxRank","taxonAuthor","unacceptReason","usage")
 	parsedat <- function(x){
-	  tmp <- getNodeSet(out, sprintf("//ax21:%s",x), namespaces=namespaces, xmlToList)[[1]]
+	  tmp <- getNodeSet(out, sprintf("//ax21:%s",x), namespaces = namespaces, xmlToList)[[1]]
     tmp[!names(tmp) %in% ".attrs"]
 	}
   setNames(lapply(toget, parsedat), toget)
@@ -478,8 +464,7 @@ getfullrecordfromtsn <- function(tsn, ...)
 #' }
 #' @export
 #' @keywords internal
-getgeographicdivisionsfromtsn <- function(tsn, backend = NULL, ...)
-{
+getgeographicdivisionsfromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select * from geographic_div where tsn = ", tsn, "order by geographic_value")
@@ -506,8 +491,7 @@ getgeographicdivisionsfromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getgeographicvalues <- function(backend = NULL, ...)
-{
+getgeographicvalues <- function(backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select distinct geographic_value from geographic_div order by geographic_value")
@@ -532,8 +516,7 @@ getgeographicvalues <- function(backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getglobalspeciescompletenessfromtsn <- function(tsn, backend = NULL, ...)
-{
+getglobalspeciescompletenessfromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select tsn, rank_id, completeness_rtng from taxonomic_units where tsn =", tsn)
@@ -557,8 +540,7 @@ getglobalspeciescompletenessfromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-gethierarchydownfromtsn <- function(tsn, backend = NULL, ...)
-{
+gethierarchydownfromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select t.tsn, t.parent_tsn, t.complete_name as combinedName,
@@ -592,8 +574,7 @@ gethierarchydownfromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-gethierarchyupfromtsn <- function(tsn, backend = NULL, ...)
-{
+gethierarchyupfromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select distinct t.parent_tsn, t.tsn, l.complete_name as parent_name,
@@ -629,8 +610,7 @@ gethierarchyupfromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getitistermsfromcommonname <- function(x, backend = NULL, ...)
-{
+getitistermsfromcommonname <- function(x, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- sprintf("select t.tsn, t.name_usage, t.complete_name as combinedName, v.vernacular_name, a.taxon_author as author
@@ -664,11 +644,10 @@ getitistermsfromcommonname <- function(x, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getitisterms <- function(x, ...)
-{
+getitisterms <- function(x, ...) {
   out <- itis_GET("getITISTerms", list(srchKey = x), ...)
-  namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
-  gg <- getNodeSet(out, "//ax21:itisTerms", namespaces=namespaces, xmlToList)
+  namespaces <- c(namespaces <- c(ax21 = "http://data.itis_service.itis.usgs.gov/xsd"))
+  gg <- getNodeSet(out, "//ax21:itisTerms", namespaces = namespaces, xmlToList)
   tmp <- do.call(rbind.fill, lapply(gg, function(x) data.frame(x,stringsAsFactors=FALSE)))
   names(tmp) <- tolower(names(tmp))
   row.names(tmp) <- NULL
@@ -695,8 +674,7 @@ getitisterms <- function(x, ...)
 #' }
 #' @export
 #' @keywords internal
-getitistermsfromscientificname <- function(x, backend = NULL, ...)
-{
+getitistermsfromscientificname <- function(x, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- sprintf("select t.tsn, t.name_usage, t.complete_name as combinedName, v.vernacular_name, a.taxon_author as author
@@ -736,8 +714,7 @@ getitistermsfromscientificname <- function(x, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getjurisdictionaloriginfromtsn <- function(tsn, backend = NULL, ...)
-{
+getjurisdictionaloriginfromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- sprintf("Select * from jurisdiction where tsn = %s order by jurisdiction_value", tsn)
@@ -772,8 +749,7 @@ getjurisdictionaloriginfromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getjurisdictionoriginvalues <- function(backend = NULL, ...)
-{
+getjurisdictionoriginvalues <- function(backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- "select distinct jurisdiction_value, origin from jurisdiction order by jurisdiction_value, origin"
@@ -826,8 +802,7 @@ getjurisdictionvalues <- function(backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getkingdomnamefromtsn <- function(tsn, backend = NULL, ...)
-{
+getkingdomnamefromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- sprintf("SELECT kingdom_name as KingdomName, kingdom_id as KingdomID from kingdoms where kingdom_id=(select kingdom_id from taxonomic_units where tsn = %s)", tsn)
@@ -854,8 +829,7 @@ getkingdomnamefromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getkingdomnames <- function(backend = NULL, ...)
-{
+getkingdomnames <- function(backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select distinct k.*, t.tsn
@@ -883,8 +857,7 @@ getkingdomnames <- function(backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getlastchangedate <- function(backend = NULL, ...)
-{
+getlastchangedate <- function(backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select max(update_date) from taxonomic_units")
@@ -918,8 +891,7 @@ getlsidfromtsn <- function(tsn, ...) xmlToList(itis_GET("getLSIDFromTSN", list(t
 #' }
 #' @export
 #' @keywords internal
-getothersourcesfromtsn <- function(tsn, backend=NULL, ...)
-{
+getothersourcesfromtsn <- function(tsn, backend=NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select '1' as sort_order, r.original_desc_ind, NULL as language, r.vernacular_name, o.*
@@ -951,8 +923,7 @@ getothersourcesfromtsn <- function(tsn, backend=NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getparenttsnfromtsn <- function(tsn, backend=NULL, ...)
-{
+getparenttsnfromtsn <- function(tsn, backend=NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("SELECT parent_tsn as ParentTSN from taxonomic_units WHERE",
@@ -977,8 +948,7 @@ getparenttsnfromtsn <- function(tsn, backend=NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getpublicationsfromtsn <- function(tsn, backend=NULL, ...)
-{
+getpublicationsfromtsn <- function(tsn, backend=NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("Select '1' as sort_order, r.vernacular_name, NULL as language, r.original_desc_ind, p.*
@@ -1018,8 +988,7 @@ getpublicationsfromtsn <- function(tsn, backend=NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getranknames <- function(backend=NULL, ...)
-{
+getranknames <- function(backend=NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select k.kingdom_name, t.kingdom_id, t.rank_name, t.rank_id
@@ -1046,10 +1015,9 @@ getranknames <- function(backend=NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getrecordfromlsid <- function(lsid, ...)
-{
+getrecordfromlsid <- function(lsid, ...) {
 	out <- itis_GET("getRecordFromLSID", list(lsid = lsid), ...)
-  namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
+  namespaces <- c(namespaces <- c(ax21 = "http://data.itis_service.itis.usgs.gov/xsd"))
   toget <- list("authorship","genusPart","infragenericEpithet",
                 "infraspecificEpithet","lsid","nameComplete","nomenclaturalCode",
                 "rank","rankString","specificEpithet","uninomial","tsn")
@@ -1065,8 +1033,7 @@ getrecordfromlsid <- function(lsid, ...)
 #' }
 #' @export
 #' @keywords internal
-getreviewyearfromtsn <- function(tsn, backend = NULL, ...)
-{
+getreviewyearfromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste0("Select tsn, rank_id, currency_rating from taxonomic_units where tsn = ", tsn)
@@ -1089,8 +1056,7 @@ getreviewyearfromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getscientificnamefromtsn <- function(tsn, backend = NULL, ...)
-{
+getscientificnamefromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select t.tsn, t.unit_ind1, t.unit_name1, t.unit_ind2, t.unit_name2,
@@ -1126,8 +1092,7 @@ getscientificnamefromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getsynonymnamesfromtsn <- function(tsn, backend = NULL, ...)
-{
+getsynonymnamesfromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("SELECT",
@@ -1167,8 +1132,7 @@ getsynonymnamesfromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-gettaxonauthorshipfromtsn <- function(tsn, backend = NULL, ...)
-{
+gettaxonauthorshipfromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select t.tsn as tsn, a.taxon_author as author, a.update_date as date
@@ -1193,8 +1157,7 @@ gettaxonauthorshipfromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-gettaxonomicranknamefromtsn <- function(tsn, backend = NULL, ...)
-{
+gettaxonomicranknamefromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("SELECT t.kingdom_id, t.rank_id, t.tsn, r.rank_name, k.kingdom_name from taxonomic_units t
@@ -1220,8 +1183,7 @@ gettaxonomicranknamefromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-gettaxonomicusagefromtsn <- function(tsn, backend = NULL, ...)
-{
+gettaxonomicusagefromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select tsn, name_usage from taxonomic_units where ",
@@ -1250,8 +1212,7 @@ gettaxonomicusagefromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-gettsnbyvernacularlanguage <- function(language, backend = NULL, ...)
-{
+gettsnbyvernacularlanguage <- function(language, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("select",
@@ -1277,8 +1238,7 @@ gettsnbyvernacularlanguage <- function(language, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-gettsnfromlsid <- function(lsid, ...)
-{
+gettsnfromlsid <- function(lsid, ...) {
 	out <- itis_GET("getTSNFromLSID", list(lsid = lsid), ...)
   if( !is.na( suppressWarnings(as.numeric(xmlToList(out)[[1]])) ) )
     { suppressWarnings( as.numeric(xmlToList(out)[[1]]) )} else
@@ -1294,8 +1254,7 @@ gettsnfromlsid <- function(lsid, ...)
 #' }
 #' @export
 #' @keywords internal
-getunacceptabilityreasonfromtsn <- function(tsn, backend = NULL, ...)
-{
+getunacceptabilityreasonfromtsn <- function(tsn, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("SELECT tsn, unaccept_reason FROM taxonomic_units WHERE",
@@ -1322,8 +1281,7 @@ getunacceptabilityreasonfromtsn <- function(tsn, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-getvernacularlanguages <- function(backend = NULL, ...)
-{
+getvernacularlanguages <- function(backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- "select distinct language from vernaculars order by language"
@@ -1352,8 +1310,7 @@ getvernacularlanguages <- function(backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-searchbycommonname <- function(x, backend = NULL, ...)
-{
+searchbycommonname <- function(x, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("SELECT",
@@ -1407,8 +1364,7 @@ itis_searchcommon <- function(x, from = "begin", backend = NULL, ...) {
 #' }
 #' @export
 #' @keywords internal
-searchbycommonnamebeginswith <- function(x, backend = NULL, ...)
-{
+searchbycommonnamebeginswith <- function(x, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("SELECT",
@@ -1442,8 +1398,7 @@ searchbycommonnamebeginswith <- function(x, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-searchbycommonnameendswith <- function(x, backend = NULL, ...)
-{
+searchbycommonnameendswith <- function(x, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("SELECT",
@@ -1479,8 +1434,7 @@ searchbycommonnameendswith <- function(x, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-searchbyscientificname <- function(x, backend = NULL, ...)
-{
+searchbyscientificname <- function(x, backend = NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- paste("SELECT",
@@ -1510,8 +1464,7 @@ searchbyscientificname <- function(x, backend = NULL, ...)
 #' }
 #' @export
 #' @keywords internal
-searchforanymatch <- function(x, backend=NULL, ...)
-{
+searchforanymatch <- function(x, backend=NULL, ...) {
   backend <- get_back(backend)
   if( backend == "local" ) {
     query <- get_query(x)
@@ -1580,14 +1533,13 @@ get_df <- function(x, temp){
 #' }
 #' @export
 #' @keywords internal
-searchforanymatchpaged <- function(x, pagesize = NULL, pagenum = NULL, ascend = NULL, ...)
-{
+searchforanymatchpaged <- function(x, pagesize = NULL, pagenum = NULL, ascend = NULL, ...) {
   args <- taxize_compact(list(srchKey=x, pageSize=pagesize, pageNum=pagenum, ascend=ascend))
 	out <- itis_GET("searchForAnyMatchPaged", args, ...)
-  namespaces <- c(namespaces <- c(ax21="http://data.itis_service.itis.usgs.gov/xsd"))
+  namespaces <- c(namespaces <- c(ax21 = "http://data.itis_service.itis.usgs.gov/xsd"))
 
 	if(is.character(x)){
-	  me <- getNodeSet(out, "//ax21:anyMatchList", namespaces=namespaces)
+	  me <- getNodeSet(out, "//ax21:anyMatchList", namespaces = namespaces)
 	  comname <- sapply(me, function(x) xmlValue(x[["commonNameList"]][["commonNames"]][["commonName"]]))
 	  comname_lang <- sapply(me, function(x) xmlValue(x[["commonNameList"]][["commonNames"]][["language"]]))
 	  sciname <- sapply(me, function(x) xmlValue(x[["sciName"]]))
@@ -1595,7 +1547,7 @@ searchforanymatchpaged <- function(x, pagesize = NULL, pagenum = NULL, ascend = 
 	  data.frame(tsn=tsn, sciname=sciname, comname=comname, comname_lang=comname_lang, stringsAsFactors = FALSE)
 	} else
 	{
-	  me <- getNodeSet(out, "//ax21:commonNames", namespaces=namespaces)
+	  me <- getNodeSet(out, "//ax21:commonNames", namespaces = namespaces)
 	  comname <- sapply(me, function(x) xmlValue(x[["commonName"]]))
 	  comname_tsn <- sapply(me, function(x) xmlValue(x[["tsn"]]))
 	  comname_lang <- sapply(me, function(x) xmlValue(x[["language"]]))

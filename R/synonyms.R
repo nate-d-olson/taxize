@@ -13,8 +13,12 @@
 #' gather synonyms.
 #'
 #' @return A named list of data.frames with the synonyms of every supplied taxa.
-#' @note If IDs are supplied directly (not from the \code{get_*} functions) you
-#'    must specify the type of ID.
+#' @details If IDs are supplied directly (not from the \code{get_*} functions) you
+#' must specify the type of ID.
+#'
+#' For \code{db = "itis"} you can pass in a parameter \code{accepted} to toggle whether
+#' only accepted names are used \code{accepted = TRUE}, or if all are used
+#' \code{accepted = FALSE}. The default is \code{accepted = FALSE}.
 #'
 #' @seealso \code{\link[taxize]{get_tsn}}, \code{\link[taxize]{get_tpsid}},
 #' \code{\link[taxize]{get_ubioid}}, \code{\link[taxize]{get_nbnid}}
@@ -30,6 +34,12 @@
 #' synonyms("Salmo friderici", db='ubio')
 #' synonyms(c("Salmo friderici",'Carcharodon carcharias','Puma concolor'), db="ubio")
 #' synonyms("Pinus sylvestris", db='nbn')
+#'
+#' # not accepted names, with ITIS
+#' ## looks for whether the name given is an accepted name,
+#' ## and if not, uses the accepted name to look for synonyms
+#' synonyms("Acer drummondii", db="itis")
+#' synonyms("Spinus pinus", db="itis")
 #'
 #' # Use get_* methods
 #' synonyms(get_tsn("Poa annua"))
@@ -82,8 +92,14 @@ synonyms.tsn <- function(id, ...)
 {
   fun <- function(x){
     if (is.na(x)) { NA } else {
+      is_acc <- getacceptednamesfromtsn(x, ...)
+      if (is(is_acc, "list")) {
+        x <- is_acc$acceptedTsn
+        message("Accepted name is '", is_acc$acceptedName, "'")
+        message("Using tsn ", is_acc$acceptedTsn, "\n")
+      }
       out <- getsynonymnamesfromtsn(x, ...)
-      if(as.character(out[1,1]) == 'nomatch') names(out) <- c('name','tsn')
+      if (as.character(out[1,1]) == 'nomatch') names(out) <- c('name','tsn')
       out
     }
   }
